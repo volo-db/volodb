@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: test1234
+      MYSQL_DATABASE: volo_db
+    volumes:
+      - ~/mysql/volodb:/var/lib/mysql
+    ports:
+      - "40101:3306"
+    networks:
+      - volodb_network
+
+  minio:
+    image: quay.io/minio/minio
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: volodb
+      MINIO_ROOT_PASSWORD: test1234
+    volumes:
+      - ~/minio/volodb/data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    networks:
+      - volodb_network
+
+networks:
+  volodb_network:
+    name: volodb_network
