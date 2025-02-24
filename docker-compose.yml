@@ -39,8 +39,8 @@ services:
       MYSQL_DATABASE: volo_db # the database name
       # MYSQL_USER: volodb_user
       # MYSQL_PASSWORD: demodemo # change to a secure password
-    ports:
-      - "40101:3306"
+    # ports:
+    #   - "40101:3306"
     volumes:
       - ~/mysql/volodb:/var/lib/mysql
     # networks:
