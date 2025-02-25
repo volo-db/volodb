@@ -1,7 +1,7 @@
 
 
 # Main site (PWA application)
-localhost {
+{$SERVER_NAME:localhost} {
     reverse_proxy /api/* api:8080   # Forward requests starting with /api to the Spring Boot API
     reverse_proxy /* pwa:3000        # Forward all other requests to the Nuxt PWA
 }

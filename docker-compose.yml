@@ -3,48 +3,29 @@ services:
   pwa:
     build:
       context: ./pwa/
-      # dockerfile: Dockerfile # assuming a custom Dockerfile for the Nuxt app in the root
-    # ports:
-    #   - "3000:3000" # Exposes Nuxt app on port 3000
     depends_on:
-      - mysql
+      - postgres
       - minio
-    # environment:
-    #   MYSQL_HOST: mysql
-    #   MYSQL_PORT: 3306
-    #   MINIO_HOST: minio
-    #   MINIO_PORT: 9000
 
   # Spring Boot API Application
   api:
     build:
       context: ./api/
-      # dockerfile: Dockerfile # assuming a custom Dockerfile for Spring Boot API in the root
-    # ports:
-    #   - "8080:8080" # Exposes Spring Boot app on port 8080
     depends_on:
-      - mysql
+      - postgres
       - minio
-    # environment:
-    #   MYSQL_HOST: mysql
-    #   MYSQL_PORT: 40101
-    #   MINIO_HOST: minio
-    #   MINIO_PORT: 9000
 
-  # MySQL Database
-  mysql:
-    image: mysql:8.3
+  postgres:
+    image: postgres:17.4-alpine
     environment:
-      MYSQL_ROOT_PASSWORD: test1234 # change to a strong password
-      MYSQL_DATABASE: volo_db # the database name
-      # MYSQL_USER: volodb_user
-      # MYSQL_PASSWORD: demodemo # change to a secure password
-    # ports:
-    #   - "40101:3306"
+      - POSTGRES_DB=volo_db
+      # You should definitely change the password in production
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-!ChangeMe!}
+      - POSTGRES_USER=${POSTGRES_USER:-app}
     volumes:
-      - ~/mysql/volodb:/var/lib/mysql
-    # networks:
-    #   - volodb_network
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   # MinIO Object Storage
   minio:
@@ -56,14 +37,12 @@ services:
       #MINIO_SECRET_KEY: minioadmin # change to your desired secret key
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000" # Exposes MinIO on port 9000
-      - "9001:9001" # Exposes MinIO on port 9001
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - ~/minio/volodb/data:/data
-    # networks:
-    #   - volodb_network
     depends_on:
-      - mysql
+      - postgres
 
   # Caddy Reverse Proxy with SSL
   caddy:
@@ -73,18 +52,14 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile # Customize your Caddyfile for domain and reverse proxy
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
       - pwa
       - api
-    # networks:
-    #   - volodb_network
 
 volumes:
   caddy_data:
   caddy_config:
-# networks:
-#   volodb_network:
-#     name: volodb_network
+  db_data:
