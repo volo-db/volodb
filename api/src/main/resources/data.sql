@@ -1,405 +1,3 @@
-/* Delete DB and set it up again to clear all data */
-
-DROP DATABASE  IF EXISTS `volo_db`;
-CREATE DATABASE `volo_db` CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;
-USE `volo_db`;
-
-DROP TABLE IF EXISTS `person`;
-CREATE TABLE `person` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `gender` INT NOT NULL,
-  `lastname` VARCHAR(50) NOT NULL,
-  `firstname` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `gender`;
-CREATE TABLE `gender` (
-  `id` INT  NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `address`;
-CREATE TABLE `address` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `person` INT NOT NULL,
-  `status` INT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  `careof` VARCHAR(50),
-  `country` INT NOT NULL,
-  `state` VARCHAR(50),
-  `street` VARCHAR(50) NOT NULL,
-  `postal_code` VARCHAR(10) NOT NULL,
-  `city` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `contact`;
-CREATE TABLE `contact` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `person` INT NOT NULL,
-  `type` INT NOT NULL,
-  `val` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `contact_type`;
-CREATE TABLE `contact_type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `email` VARCHAR(50) NOT NULL,
-  `person` INT NOT NULL,
-  `secret` VARCHAR(100) NOT NULL,
-  `organisational_role` VARCHAR(50),
-  `avatar` TEXT,
-  PRIMARY KEY (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `user_role`;
-CREATE TABLE `user_role` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `user_role_mapping`;
-CREATE TABLE `user_role_mapping` (
-  `user` VARCHAR(50) NOT NULL,
-  `user_role` INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `contract`;
-CREATE TABLE `contract` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `timestamp` DATETIME NOT NULL,
-  `volunteer` INT NOT NULL,
-  `program` INT NOT NULL,
-  `project` INT NOT NULL,
-  `contact_person_of_project` INT,
-  `start` DATE NOT NULL,
-  `end` DATE NOT NULL,
-  `visa_necessary` BOOLEAN NOT NULL,
-  `incoming_volunteer` BOOLEAN NOT NULL,
-  `salary` INT NOT NULL,
-  `holiday` INT NOT NULL,
-  `seminar_days` INT NOT NULL,
-  `sick_days` INT NOT NULL,
-  `metadata` JSON,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `legal_guardian`;
-CREATE TABLE `legal_guardian` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `contract` INT NOT NULL,
-  `address` INT NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `volunteer`;
-CREATE TABLE `volunteer` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `organisational_id` VARCHAR(50) NOT NULL,
-  `person` INT NOT NULL,
-  `created` DATETIME NOT NULL,
-  `status` INT NOT NULL,
-  `birthday` DATE,
-  `birthplace` VARCHAR(50),
-  `nationality` INT, 
-  `social_insurance_number` VARCHAR(50),
-  `health_insurance` INT,
-  `tax_number` VARCHAR(50),
-  `religion` INT,
-  `bank_name` VARCHAR(50),
-  `iban` VARCHAR(22),
-  `bic` VARCHAR(11),
-  `account_holder` VARCHAR(50),
-  `level_of_school_edu` INT,
-  `level_of_vocational_edu` INT,
-  `ongoing_legal_proceedings` BOOLEAN,
-  `avatar` TEXT,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `editing_history`;
-CREATE TABLE `editing_history` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `editing_type` INT NOT NULL,
-  `timestamp` DATETIME NOT NULL,
-  `user` VARCHAR(50) NOT NULL,
-  `volunteer` INT NOT NULL,
-  `field` VARCHAR(50) NOT NULL,
-  `value` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `editing_type`;
-CREATE TABLE `editing_type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `volunteer_status`;
-CREATE TABLE `volunteer_status` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `healt_insurance`;
-CREATE TABLE `healt_insurance` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `religion`;
-CREATE TABLE `religion` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  `shorthand` VARCHAR(2) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `school_edu`;
-CREATE TABLE `school_edu` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `vocational_edu`;
-CREATE TABLE `vocational_edu` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `contract_modification`;
-CREATE TABLE `contract_modification` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `timestamp` DATETIME NOT NULL,
-  `status` INT NOT NULL,
-  `contract` INT NOT NULL,
-  `type` INT NOT NULL,
-  `into_force_from` DATE NOT NULL,
-  `value` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `contract_modification_status`;
-CREATE TABLE `contract_modification_status` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `contract_modification_type`;
-CREATE TABLE `contract_modification_type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `salary`;
-CREATE TABLE `salary` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  `description` VARCHAR(250),
-  `pocket_money` DOUBLE NOT NULL,
-  `free_of_charge_service` DOUBLE NOT NULL,
-  `food_allowance` DOUBLE NOT NULL,
-  `free_of_charge_food` DOUBLE NOT NULL,
-  `accommodation_allowance` DOUBLE NOT NULL,
-  `free_of_charge_accommodation` DOUBLE NOT NULL,
-  `insurance_contributions` DOUBLE NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `program`;
-CREATE TABLE `program` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  `shorthand` VARCHAR(10) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `country`;
-CREATE TABLE country (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(50) COMMENT 'Full country name.',
-  `iso2` VARCHAR(2) NOT NULL COMMENT 'ISO 3166-1 alpha-2 code.',
-  `iso3` VARCHAR(3) COMMENT 'ISO 3166-1 alpha-3 code.',
-  `local_name` VARCHAR(50) COMMENT 'Local variation of the name.',
-  `continent` ENUM('Africa', 'Antarctica', 'Asia', 'Europe', 'Oceania', 'North America', 'South America'),
-  `nationality` VARCHAR(50) COMMENT 'Nationality in german language.'
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='Full list of countries.';
-
-DROP TABLE IF EXISTS `health_insurance`;
-CREATE TABLE health_insurance (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(255) NOT NULL COMMENT 'Full name of Insurance.',
-  `web` VARCHAR(255) COMMENT 'Webside of Insurance.',
-  `fee` DOUBLE NOT NULL COMMENT 'Zusatzbeitrag in Prozent',
-  `additional_info` VARCHAR(512) COMMENT 'Geöffnet in'
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='Full list of german statutory health insurance companies.';
-
-DROP TABLE IF EXISTS `project`;
-CREATE TABLE `project` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `organisational_id` VARCHAR(50),
-  `name` VARCHAR(50) NOT NULL,
-  `shorthand` VARCHAR(32) NOT NULL,
-  `description` TEXT(1000),
-  `capacity` INT NOT NULL,
-  `careof` VARCHAR(50),
-  `country` INT NOT NULL,
-  `state` VARCHAR(50),
-  `street` VARCHAR(50) NOT NULL,
-  `postal_code` VARCHAR(10) NOT NULL,
-  `city` VARCHAR(50) NOT NULL,
-  `phone` VARCHAR(50) NOT NULL,
-  `email` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `contact_person`;
-CREATE TABLE `contact_person` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `person` INT NOT NULL,
-  `project` INT NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `project_role`;
-CREATE TABLE `project_role` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-
-DROP TABLE IF EXISTS `project_role_mapping`;
-CREATE TABLE `project_role_mapping` (
-  `contact_person` INT NOT NULL,
-  `project_role` INT NOT NULL
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS `volunteer_note`;
-CREATE TABLE `volunteer_note` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `timestamp` DATETIME NOT NULL,
-  `volunteer` INT NOT NULL,
-  `type` VARCHAR(50) NOT NULL,
-  `note` TEXT NOT NULL,
-  `user` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `volunteer_document`;
-CREATE TABLE `volunteer_document` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `timestamp` DATETIME NOT NULL,
-  `name` VARCHAR(50) NOT NULL,
-  `volunteer` INT NOT NULL,
-  `type` INT NOT NULL,
-  `size` INT NOT NULL,
-  `path` TEXT NOT NULL,
-  `user` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `volunteer_document_type`;
-CREATE TABLE `volunteer_document_type` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  `description` TEXT,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-ALTER TABLE `user` ADD FOREIGN KEY (`person`) REFERENCES `person` (`id`);
-
-ALTER TABLE `user_role_mapping` ADD FOREIGN KEY (`user`) REFERENCES `user` (`email`);
-
-ALTER TABLE `user_role_mapping` ADD FOREIGN KEY (`user_role`) REFERENCES `user_role` (`id`);
-
-ALTER TABLE `person` ADD FOREIGN KEY (`gender`) REFERENCES `gender` (`id`);
-
-ALTER TABLE `address` ADD FOREIGN KEY (`person`) REFERENCES `person` (`id`);
-
-ALTER TABLE `address` ADD FOREIGN KEY (`country`) REFERENCES `country` (`id`);
-
-ALTER TABLE `contact` ADD FOREIGN KEY (`type`) REFERENCES `contact_type` (`id`);
-
-ALTER TABLE `contact` ADD FOREIGN KEY (`person`) REFERENCES `person` (`id`);
-
-ALTER TABLE `legal_guardian` ADD FOREIGN KEY (`contract`) REFERENCES `contract` (`id`);
-
-ALTER TABLE `legal_guardian` ADD FOREIGN KEY (`address`) REFERENCES `address` (`id`);
-
-ALTER TABLE `volunteer` ADD FOREIGN KEY (`person`) REFERENCES `person` (`id`);
-
-ALTER TABLE `volunteer` ADD FOREIGN KEY (`status`) REFERENCES `volunteer_status` (`id`);
-
-ALTER TABLE `volunteer` ADD FOREIGN KEY (`nationality`) REFERENCES `country` (`id`);
-
-ALTER TABLE `volunteer` ADD FOREIGN KEY (`level_of_school_edu`) REFERENCES `school_edu` (`id`);
-
-ALTER TABLE `volunteer` ADD FOREIGN KEY (`level_of_vocational_edu`) REFERENCES `vocational_edu` (`id`);
-
-ALTER TABLE `volunteer` ADD FOREIGN KEY (`health_insurance`) REFERENCES `health_insurance` (`id`);
-
-ALTER TABLE `volunteer` ADD FOREIGN KEY (`religion`) REFERENCES `religion` (`id`);
-
-ALTER TABLE `editing_history` ADD FOREIGN KEY (`volunteer`) REFERENCES `volunteer` (`id`);
-
-ALTER TABLE `editing_history` ADD FOREIGN KEY (`user`) REFERENCES `user` (`email`);
-
-ALTER TABLE `editing_history` ADD FOREIGN KEY (`editing_type`) REFERENCES `editing_type` (`id`);
-
-ALTER TABLE `contract` ADD FOREIGN KEY (`volunteer`) REFERENCES `volunteer` (`id`);
-
-ALTER TABLE `contract` ADD FOREIGN KEY (`program`) REFERENCES `program` (`id`);
-
-ALTER TABLE `contract` ADD FOREIGN KEY (`project`) REFERENCES `project` (`id`);
-
-ALTER TABLE `contract` ADD FOREIGN KEY (`salary`) REFERENCES `salary` (`id`);
-
-ALTER TABLE `contract` ADD FOREIGN KEY (`contact_person_of_project`) REFERENCES `contact_person` (`id`);
-
-ALTER TABLE `contract_modification` ADD FOREIGN KEY (`type`) REFERENCES `contract_modification_type` (`id`);
-
-ALTER TABLE `contract_modification` ADD FOREIGN KEY (`contract`) REFERENCES `contract` (`id`);
-
-ALTER TABLE `contact_person` ADD FOREIGN KEY (`person`) REFERENCES `person` (`id`);
-
-ALTER TABLE `contact_person` ADD FOREIGN KEY (`project`) REFERENCES `project` (`id`);
-
-ALTER TABLE `project_role_mapping` ADD FOREIGN KEY (`contact_person`) REFERENCES `contact_person` (`id`);
-
-ALTER TABLE `project_role_mapping` ADD FOREIGN KEY (`project_role`) REFERENCES `project_role` (`id`);
-
-ALTER TABLE `project` ADD FOREIGN KEY (`country`) REFERENCES `country` (`id`);
-
-ALTER TABLE `contract_modification` ADD FOREIGN KEY (`status`) REFERENCES `contract_modification_status` (`id`);
-
-ALTER TABLE `volunteer_note` ADD FOREIGN KEY (`volunteer`) REFERENCES `volunteer` (`id`);
-
-ALTER TABLE `volunteer_note` ADD FOREIGN KEY (`user`) REFERENCES `user` (`email`);
-
-ALTER TABLE `volunteer_document` ADD FOREIGN KEY (`volunteer`) REFERENCES `volunteer` (`id`);
-
-ALTER TABLE `volunteer_document` ADD FOREIGN KEY (`type`) REFERENCES `volunteer_document_type` (`id`);
-
-ALTER TABLE `volunteer_document` ADD FOREIGN KEY (`user`) REFERENCES `user` (`email`);
-
 /* ########################## */
 /*      INSERT NEW DATA       */
 /* ########################## */
@@ -727,7 +325,7 @@ VALUES
   (5, 1, 'goldsmits@donbosco.de'),
   (5, 1, 'mohring@manege-berlin.de');
 
-INSERT INTO user (person, email, secret, organisational_role, avatar)
+INSERT INTO "user" (person, email, secret, organisational_role, avatar)
 VALUES
   (6, 'wiesinger@donbosco.de', '$2a$12$bvG0ScICxF6gaF4cstczNub7PI79w/o0EIez9dlUoZe70eMP.eaL2', 'Fachreferentin für Freiwilligendienste', 'volodb/default-files/default-avatar.png'),
   (7, 'jakob.bopp@donbosco.de', '$2a$12$bvG0ScICxF6gaF4cstczNub7PI79w/o0EIez9dlUoZe70eMP.eaL2', 'Fachreferent für Freiwilligendienste', 'volodb/default-files/default-avatar.png'),
@@ -743,7 +341,7 @@ VALUES
   ('Buchhaltung'),
   ('Seminarleitung');
 
-INSERT INTO user_role_mapping (user, user_role)
+INSERT INTO user_role_mapping ("user", user_role)
 VALUES
   ('wiesinger@donbosco.de', 2),
   ('wiesinger@donbosco.de', 4),
@@ -928,7 +526,7 @@ VALUES
   ('patch'),
   ('delete');
 
-INSERT INTO editing_history (editing_type, timestamp, user, volunteer, field, value)
+INSERT INTO editing_history (editing_type, timestamp, "user", volunteer, field, value)
 VALUES
 (2, '2023-09-01 09:12:45.293', 'jakob.bopp@donbosco.de', 1, 'email', 'die-hubers@t-online.de'),
   (1, '2023-09-02 10:37:11.628', 'urner@donbosco.de', 2, 'mobil', '+49 (0) 152 / 089782451'),
@@ -986,8 +584,8 @@ VALUES
   ('Modell 2', 'Wohnt zu Hause bei Eltern und wird dort verpflegt.', 210, 0, 160, 0, 0, 0, 148),
   ('Modell 3', 'Wohnt in eigener Wohnung und verpflegt sich selbst.', 210, 0, 265, 0, 200, 0, 270),
   ('Modell 4', 'Wohnt in EST verpflegt sich jedoch selbst.', 210, 0, 265, 0, 0, 225.25, 280.1);
-  
-INSERT INTO contract (timestamp, volunteer, program, project, contact_person_of_project, start, end, visa_necessary, incoming_volunteer, salary, holiday, seminar_days, sick_days, metadata)
+
+INSERT INTO contract (timestamp, volunteer, program, project, contact_person_of_project, "start", "end", visa_necessary, incoming_volunteer, salary, holiday, seminar_days, sick_days, metadata)
 VALUES
   ('2023-03-08 12:34:56.789', 1, 1, 1, 1, '2022-09-01', '2023-08-31', false, false, 1, 26, 25, 0, '{ "bfd-nummer": "20020318AH1T3", "politische-bildung": 5 }'),
   ('2023-03-08 12:34:56.789', 2, 2, 2, 2, '2022-09-01', '2023-08-31', false, false, 1, 26, 25, 0, '{}'),
@@ -1023,7 +621,7 @@ VALUES
   (8, 1),
   (9, 3);
 
-INSERT INTO volunteer_note (timestamp, volunteer, type, note, user)
+INSERT INTO volunteer_note (timestamp, volunteer, type, note, "user")
 VALUES
   ('2024-01-10 14:51:39.123', 1, 'Eingehender Anruf', 'FW hat angerufen und sich über einen FWD in Jünkerath informiert.
 Ich habe FW über unseren Träger aufgeklärt und die weiteren Einsatzmöglichkeiten in ganz Deutschland aufgezeigt.
@@ -1064,8 +662,8 @@ FW möchte nächste Woche zur Messe nach Regensburg kommen. Da klären wir alles
   ('Erweitertes Führungszeugnis', 'Erweitertes polizeiliches Führungszeugnis welches nicht älter als 12 Monate sein darf'),
   ('Einwillingung Foto- und Videoaufnahmen', 'Einwilligung über Foto- und Videoaufnahmen welche für öffentlichkeitsarbeitszwecke wärend des FWD angefertigt werden könnten.'),
   ('Bewertungsbogen', 'Bewertungsbogen von EST.');
-  
-  INSERT INTO volunteer_document (timestamp, name, volunteer, type, size, path, user)
+
+  INSERT INTO volunteer_document (timestamp, name, volunteer, type, size, path, "user")
   VALUES
   ('2024-03-18 13:39:22.321','Datei Eins' , 1, 1, 232002, 'docs/folder/file1.pdf', 'urner@donbosco.de'),
   ('2024-03-18 13:39:22.321','Datei Zwei' , 1, 1, 436022, 'docs/folder/file2.pdf', 'urner@donbosco.de'),
