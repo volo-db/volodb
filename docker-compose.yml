@@ -2,7 +2,9 @@ services:
   # Nuxt PWA Application
   pwa:
     build:
-      context: ./pwa/
+      context: ./pwa
+    volumes:
+      - ./:/app/
     depends_on:
       - postgres
       - minio
