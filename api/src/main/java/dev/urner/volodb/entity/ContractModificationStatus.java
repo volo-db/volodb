@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "ContractModificationStatus")
+@Table(name = "contractModificationStatus")
 @Getter
 @Setter
 @RequiredArgsConstructor

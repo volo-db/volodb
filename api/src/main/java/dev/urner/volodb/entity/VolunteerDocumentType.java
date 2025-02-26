@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "VolunteerDocumentType")
+@Table(name = "volunteerDocumentType")
 @Getter
 @Setter
 @RequiredArgsConstructor
