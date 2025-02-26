@@ -8,6 +8,7 @@ services:
     depends_on:
       - postgres
       - minio
+    command: sh -c "rm -rf /tmp/nitro && npm run dev"
 
   # Spring Boot API Application
   api:
