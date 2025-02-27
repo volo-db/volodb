@@ -3,12 +3,17 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app/pwa
 
-# Copy project files (optional, useful for local development)
+# Copy package.json and package-lock.json first to leverage Docker caching
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the project files
 COPY . .
 
-# Clean up any leftover socket files on container start
-RUN rm -rf /tmp/nitro && \
-    npm install
+# Ensure node_modules/.bin is in PATH
+ENV PATH /app/pwa/node_modules/.bin:$PATH
 
 # Start the Nuxt app
 CMD ["npm", "run", "dev"]
