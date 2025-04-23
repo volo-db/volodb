@@ -1,6 +1,12 @@
 <template>
-  <section v-if="volo" class="w-[70vw] max-w-[850px] min-w-[400px]" @keydown.esc="$emit('close')">
-    <header class="flex justify-center p-5 border-solid border-b border-vologray-200">
+  <section
+    v-if="volo"
+    class="w-[70vw] max-w-[850px] min-w-[400px]"
+    @keydown.esc="$emit('close')"
+  >
+    <header
+      class="flex justify-center p-5 border-solid border-b border-vologray-200"
+    >
       <h2 class="text-[20px] text-bold font-medium">
         Neuer Kontakt für {{ volo.person.firstname }}
       </h2>
@@ -16,7 +22,8 @@
         <!-- left column -->
         <div class="flex-1">
           <p class="text-[13px] text-vologray-400 pe-20">
-            Lege hier eine neue Kontaktmöglichekeit für {{ volo.person.firstname }} an
+            Lege hier eine neue Kontaktmöglichekeit für
+            {{ volo.person.firstname }} an
           </p>
         </div>
         <!-- right column -->
@@ -36,7 +43,7 @@
                 'Signal',
                 'Threema',
                 'Telegram',
-                'Instagram'
+                'Instagram',
               ]"
               label="Kontakttyp"
               id="type"
@@ -64,58 +71,62 @@
         <IconSpinner />speichere daten...
       </div>
     </main>
-    <footer class="flex justify-between p-6 border-solid border-t border-vologray-200">
-      <ButtonStandard @click.prevent="$emit('close')" :gray="true">Abbrechen</ButtonStandard>
+    <footer
+      class="flex justify-between p-6 border-solid border-t border-vologray-200"
+    >
+      <ButtonStandard @click.prevent="$emit('close')" :gray="true"
+        >Abbrechen</ButtonStandard
+      >
       <ButtonStandard type="submit" form="new-volunteer"
-        >Kontakt {{ contact ? 'speichern' : 'hinzufügen' }}</ButtonStandard
+        >Kontakt {{ contact ? "speichern" : "hinzufügen" }}</ButtonStandard
       >
     </footer>
   </section>
 </template>
 <script>
-import ButtonStandard from './ButtonStandard.vue'
-import { useContactStore } from '@/stores/ContactStore'
-import { useVolunteerStore } from '@/stores/VolunteerStore'
-import { parsePhoneNumber, isPossiblePhoneNumber } from 'libphonenumber-js'
-import FormularInput from './FormularInput.vue'
-import FormularSelectBox from './FormularSelectBox.vue'
-import IconSpinner from './IconSpinner.vue'
+import ButtonStandard from "./ButtonStandard.vue";
+import { useContactStore } from "@/stores/ContactStore";
+import { useVolunteerStore } from "~/stores/VolunteerStore";
+import { parsePhoneNumber, isPossiblePhoneNumber } from "libphonenumber-js";
+import FormularInput from "./FormularInput.vue";
+import FormularSelectBox from "./FormularSelectBox.vue";
+import IconSpinner from "./IconSpinner.vue";
 
 export default {
   components: { ButtonStandard, IconSpinner, FormularInput, FormularSelectBox },
   setup() {
-    const contactStore = useContactStore()
-    const volunteerStore = useVolunteerStore()
+    const contactStore = useContactStore();
+    const volunteerStore = useVolunteerStore();
 
     return {
       contactStore,
-      volunteerStore
-    }
+      volunteerStore,
+    };
   },
   props: {
     contact: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
       validationErr: {
-        mobile: false
+        mobile: false,
       },
       formData: {
-        type: 'Email',
-        value: ''
+        type: "Email",
+        value: "",
       },
       contactTypes: [],
       formValid: false,
       errorMessage: false,
-      valueLabel: 'Email'
-    }
+      valueLabel: "Email",
+    };
   },
   computed: {
     volo() {
-      return this.volunteerStore.selectedVolunteer
-    }
+      return this.volunteerStore.selectedVolunteer;
+    },
   },
   methods: {
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -124,120 +135,129 @@ export default {
 
     validate() {
       // clear the table ;-)
-      this.formValid = false
-      this.validationErr.value = false
+      this.formValid = false;
+      this.validationErr.value = false;
 
       // Validate fields:
       switch (this.formData.type.toLocaleLowerCase()) {
-        case 'mobil':
-        case 'festnetz':
-          this.validationErr.value = !isPossiblePhoneNumber(this.formData.value, 'DE')
-          break
+        case "mobil":
+        case "festnetz":
+          this.validationErr.value = !isPossiblePhoneNumber(
+            this.formData.value,
+            "DE"
+          );
+          break;
 
         default:
-          break
+          break;
       }
       // Type
-      if (!this.formData.type) this.validationErr.type = true
+      if (!this.formData.type) this.validationErr.type = true;
 
       // Value
-      if (!this.formData.value) this.validationErr.value = true
+      if (!this.formData.value) this.validationErr.value = true;
 
       // If theres no error -> form is valid
-      if (!this.validationErr.value) this.formValid = true
+      if (!this.validationErr.value) this.formValid = true;
     },
     async onSubmit() {
-      this.errorMessage = false
+      this.errorMessage = false;
 
-      this.validate()
+      this.validate();
       if (this.formValid) {
-        let backendType = undefined
+        let backendType = undefined;
 
         switch (this.formData.type) {
-          case 'Email':
-          case 'WhatsApp':
-          case 'Signal':
-          case 'Threema':
-          case 'Telegram':
-          case 'Instagram':
-            backendType = this.formData.type.toLowerCase()
-            break
-          case 'Mobil':
-            backendType = 'mobile'
-            this.formData.value = parsePhoneNumber(this.formData.value, 'DE').number
-            break
-          case 'Festnetz':
-            backendType = 'landline'
-            this.formData.value = parsePhoneNumber(this.formData.value, 'DE').number
-            break
+          case "Email":
+          case "WhatsApp":
+          case "Signal":
+          case "Threema":
+          case "Telegram":
+          case "Instagram":
+            backendType = this.formData.type.toLowerCase();
+            break;
+          case "Mobil":
+            backendType = "mobile";
+            this.formData.value = parsePhoneNumber(
+              this.formData.value,
+              "DE"
+            ).number;
+            break;
+          case "Festnetz":
+            backendType = "landline";
+            this.formData.value = parsePhoneNumber(
+              this.formData.value,
+              "DE"
+            ).number;
+            break;
         }
 
         let contact = {
           id: this.contact ? this.contact.id : null,
           type: backendType,
-          value: this.formData.value
-        }
+          value: this.formData.value,
+        };
 
         try {
-          await this.contactStore.setContact(this.volo.id, contact)
+          await this.contactStore.setContact(this.volo.id, contact);
         } catch (error) {
-          console.error(error)
+          console.error(error);
 
           // Showing error message just for 5 seconds
-          this.errorMessage = true
+          this.errorMessage = true;
           setTimeout(() => {
-            this.errorMessage = false
-          }, 5000)
-          return
+            this.errorMessage = false;
+          }, 5000);
+          return;
         }
 
-        this.$emit('saved')
-        this.$emit('close')
+        this.$emit("saved");
+        this.$emit("close");
       }
-    }
+    },
   },
   async beforeMount() {
-    await this.contactStore.getContactTypes()
+    await this.contactStore.getContactTypes();
     this.contactStore.contactTypes.forEach((type) => {
-      this.contactTypes.push(type.name)
-    })
+      this.contactTypes.push(type.name);
+    });
 
     if (this.contact) {
-      let tempType = ''
+      let tempType = "";
 
       switch (this.contact.type.toLowerCase()) {
-        case 'email':
-          tempType = 'Email'
-          break
-        case 'whatsapp':
-          tempType = 'WhatsApp'
-          break
-        case 'signal':
-          tempType = 'Signal'
-          break
-        case 'threema':
-          tempType = 'Threema'
-          break
-        case 'telegram':
-          tempType = 'Telegram'
-          break
-        case 'instagram':
-          tempType = 'Instagram'
-          break
-        case 'mobile':
-          tempType = 'Mobil'
-          break
-        case 'landline':
-          tempType = 'Festnetz'
-          break
+        case "email":
+          tempType = "Email";
+          break;
+        case "whatsapp":
+          tempType = "WhatsApp";
+          break;
+        case "signal":
+          tempType = "Signal";
+          break;
+        case "threema":
+          tempType = "Threema";
+          break;
+        case "telegram":
+          tempType = "Telegram";
+          break;
+        case "instagram":
+          tempType = "Instagram";
+          break;
+        case "mobile":
+          tempType = "Mobil";
+          break;
+        case "landline":
+          tempType = "Festnetz";
+          break;
       }
 
-      this.formData.type = tempType
-      this.formData.value = this.contact.value
+      this.formData.type = tempType;
+      this.formData.value = this.contact.value;
     }
   },
   mounted() {
     // this.$refs.type.focus()
-  }
-}
+  },
+};
 </script>

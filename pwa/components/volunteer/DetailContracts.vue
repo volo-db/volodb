@@ -4,7 +4,10 @@
       <!-- <SearchBar placeholder="Suche nach Vereinbarungen" /> -->
       <ButtonStandard>Vereinbarung hinzufügen</ButtonStandard>
     </header>
-    <div v-if="!contract" class="flex flex-col items-center gap-8 text-vologray-700/30 mt-16">
+    <div
+      v-if="!contract"
+      class="flex flex-col items-center gap-8 text-vologray-700/30 mt-16"
+    >
       <p class="font-medium text-3xl">Noch keine Vereinbarung vorhanden</p>
       <IconContract class="text-[300px]" />
     </div>
@@ -19,7 +22,9 @@
         </p>
         <!-- Pills -->
         <div class="mt-2 flex gap-2 flex-wrap items-center">
-          <div class="bg-voloblue-200 px-2 pt-[1px] rounded-2xl flex justify-center items-center">
+          <div
+            class="bg-voloblue-200 px-2 pt-[1px] rounded-2xl flex justify-center items-center"
+          >
             <p class="inline text-white">
               {{ contract.program }}
             </p>
@@ -56,7 +61,10 @@
       <!-- Time of Service -->
       <section class="relative rounded bg-white p-[22px] w-[330px] h-[120px]">
         <h2 class="font-medium">Dienstzeit</h2>
-        <div v-if="volunteer" class="flex justify-between items-center h-[54px]">
+        <div
+          v-if="volunteer"
+          class="flex justify-between items-center h-[54px]"
+        >
           <!-- left column -->
 
           <div class="flex gap-2 mt-2 items-center">
@@ -126,7 +134,9 @@
         </ContainerModal>
         <h2 class="font-medium">Krankheitst.</h2>
         <div class="flex gap-2 items-end">
-          <IconClinicalThermometer class="inline text-3xl text-voloblue-200/50" />
+          <IconClinicalThermometer
+            class="inline text-3xl text-voloblue-200/50"
+          />
           <p class="text-3xl leading-6">{{ contract.sickDays }}</p>
         </div>
       </section>
@@ -137,7 +147,9 @@
       >
         <h2 class="font-medium">
           Vergütung
-          <span class="font-normal text-vologray-400">- ({{ contract.salary.name }})</span>
+          <span class="font-normal text-vologray-400"
+            >- ({{ contract.salary.name }})</span
+          >
         </h2>
         <div class="flex gap-2 items-end mt-2">
           <VolunteerDetailContractSallary :salary="contract.salary" />
@@ -163,7 +175,11 @@
                 {{ contract.legalGuardian.address.city }}
               </p>
               <p
-                v-if="String(contract.legalGuardian.address.country).toLowerCase() != 'deutschland'"
+                v-if="
+                  String(
+                    contract.legalGuardian.address.country
+                  ).toLowerCase() != 'deutschland'
+                "
               >
                 {{ contract.legalGuardian.address.country }}
               </p>
@@ -175,34 +191,34 @@
   </div>
 </template>
 <script>
-import { useVolunteerStore } from '@/stores/VolunteerStore'
+import { useVolunteerStore } from "~/stores/VolunteerStore";
 // import SearchBar from '@/components/SearchBar.vue'
-import ButtonStandard from '@/components/ButtonStandard.vue'
-import { getAge, getAgeToday, getPropperDateString } from '@/utils/dateAndTime'
-import IconCalendar from './IconCalendar.vue'
-import IconCircleWithCheckmark from './IconCircleWithCheckmark.vue'
-import IconCircleWithPoint from './IconCircleWithPoint.vue'
-import IconPalmTree from './IconPalmTree.vue'
-import IconSeminars from './IconSeminars.vue'
-import IconContract from './IconContract.vue'
-import VolunteerDetailContractSallary from './VolunteerDetailContractSallary.vue'
-import IconDashboard from './IconDashboard.vue'
-import IconClinicalThermometer from './IconClinicalThermometer.vue'
-import IconPlus from './IconPlus.vue'
-import IconPenEdit from './IconPenEdit.vue'
-import ContainerModal from './ContainerModal.vue'
-import VolunteerContractFormularSickdays from './VolunteerContractFormularSickdays.vue'
+import ButtonStandard from "@/components/ButtonStandard.vue";
+import { getAge, getAgeToday, getPropperDateString } from "@/utils/dateAndTime";
+import IconCalendar from "./IconCalendar.vue";
+import IconCircleWithCheckmark from "./IconCircleWithCheckmark.vue";
+import IconCircleWithPoint from "./IconCircleWithPoint.vue";
+import IconPalmTree from "./IconPalmTree.vue";
+import IconSeminars from "./IconSeminars.vue";
+import IconContract from "./IconContract.vue";
+import VolunteerDetailContractSallary from "./DetailContractSallary.vue";
+import IconDashboard from "./IconDashboard.vue";
+import IconClinicalThermometer from "./IconClinicalThermometer.vue";
+import IconPlus from "./IconPlus.vue";
+import IconPenEdit from "./IconPenEdit.vue";
+import ContainerModal from "./ContainerModal.vue";
+import VolunteerContractFormularSickdays from "./ContractFormularSickdays.vue";
 
 export default {
   setup: () => {
-    const volunteerStore = useVolunteerStore()
+    const volunteerStore = useVolunteerStore();
 
-    return { volunteerStore, getPropperDateString, getAge }
+    return { volunteerStore, getPropperDateString, getAge };
   },
   data() {
     return {
-      sickDaysModal: false
-    }
+      sickDaysModal: false,
+    };
   },
   components: {
     // SearchBar,
@@ -219,23 +235,23 @@ export default {
     IconPlus,
     IconPenEdit,
     ContainerModal,
-    VolunteerContractFormularSickdays
+    VolunteerContractFormularSickdays,
   },
   computed: {
     age() {
-      return getAgeToday(this.volunteerStore.selectedVolunteer.birthday)
+      return getAgeToday(this.volunteerStore.selectedVolunteer.birthday);
     },
     volunteer() {
-      return this.volunteerStore.selectedVolunteer
+      return this.volunteerStore.selectedVolunteer;
     },
     contract() {
-      return this.volunteerStore.selectedVolunteerRelevantContract
-    }
+      return this.volunteerStore.selectedVolunteerRelevantContract;
+    },
   },
   methods: {
     updateVolo() {
-      this.volunteerStore.getVolunteer(this.volunteer.id)
-    }
-  }
-}
+      this.volunteerStore.getVolunteer(this.volunteer.id);
+    },
+  },
+};
 </script>

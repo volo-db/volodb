@@ -110,7 +110,7 @@ const onSubmit = async () => {
   }
   try {
     await userStore.login(email.value, password.value);
-    router.push("/projects");
+    router.push("/volunteers");
   } catch (error) {
     console.error(error);
     errorAnimationMail();

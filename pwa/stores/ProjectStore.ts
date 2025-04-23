@@ -3,75 +3,80 @@ import { defineStore } from "pinia";
 
 let mostRecentRequest: string = "";
 
-export const useProjectStore = defineStore("ProjectStore", {
-  state: (): State => {
-    return {
-      fetching: false,
-      projectsPage: null as ProjectsPage | null,
-      selectedProject: null,
-      sortOrder: "asc",
-      activeSortProperty: null,
-    };
-  },
+export const useProjectStore = defineStore("ProjectStore", () => {
+  const fetching = ref(false);
+  const projectsPage = ref(null as ProjectsPage | null);
+  const selectedProject = ref(null);
+  const sortOrder = ref("asc");
+  const activeSortProperty = ref(null);
 
-  actions: {
-    async setProject(project: Project) {
-      this.fetching = true;
-      try {
-        this.selectedProject = await vdbFetchData("projects", "POST", project);
-      } catch (error) {
-        console.error(error);
-        throw error;
-      } finally {
-        this.fetching = false;
-      }
-    },
+  async function setProject(project: Project) {
+    fetching.value = true;
+    try {
+      selectedProject.value = await vdbFetchData("projects", "POST", project);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      fetching.value = false;
+    }
+  }
 
-    async getProject(projectId: ProjectId) {
-      // clear selected project
-      this.selectedProject = null;
+  async function getProject(projectId: ProjectId) {
+    // clear selected project
+    selectedProject.value = null;
 
-      this.fetching = true;
-      try {
-        this.selectedProject = await vdbFetchData(
-          `projects/${projectId}`,
-          "GET"
-        );
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.fetching = false;
-      }
-    },
+    fetching.value = true;
+    try {
+      selectedProject.value = await vdbFetchData(
+        `projects/${projectId}`,
+        "GET"
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      fetching.value = false;
+    }
+  }
 
-    async getProjects(queryObj?: QueryObj): Promise<void> {
-      if (!queryObj) {
-        queryObj = {
-          page: 1,
-          pageSize: 10,
-          sortBy: "name",
-          sortOrder: "asc",
-        };
-      }
+  async function getProjects(queryObj?: QueryObj): Promise<void> {
+    if (!queryObj) {
+      queryObj = {
+        page: 1,
+        pageSize: 10,
+        sortBy: "name",
+        sortOrder: "asc",
+      };
+    }
 
-      const thisRequest = `projects?page=${queryObj.page || 0}&pageSize=${
-        queryObj.pageSize || 10
-      }&sortBy=${queryObj.sortBy || "name"}&sortOrder=${
-        queryObj.sortOrder || "asc"
-      }&search=${queryObj.search || ""}`;
-      mostRecentRequest = thisRequest;
+    const thisRequest = `projects?page=${queryObj.page || 0}&pageSize=${
+      queryObj.pageSize || 10
+    }&sortBy=${queryObj.sortBy || "name"}&sortOrder=${
+      queryObj.sortOrder || "asc"
+    }&search=${queryObj.search || ""}`;
+    mostRecentRequest = thisRequest;
 
-      this.fetching = true;
+    fetching.value = true;
 
-      try {
-        const projectsPage = await vdbFetchData(thisRequest, "GET");
-        if (mostRecentRequest != thisRequest) return;
-        this.projectsPage = projectsPage;
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.fetching = false;
-      }
-    },
-  },
+    try {
+      const response = await vdbFetchData(thisRequest, "GET");
+      if (mostRecentRequest != thisRequest) return;
+      projectsPage.value = response;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      fetching.value = false;
+    }
+  }
+
+  return {
+    fetching,
+    projectsPage,
+    selectedProject,
+    sortOrder,
+    activeSortProperty,
+    setProject,
+    getProject,
+    getProjects,
+  };
 });

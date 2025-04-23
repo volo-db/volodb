@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { useProjectStore } from "~/stores/ProjectStore.js";
+import { useProjectStore } from "~/stores/ProjectStore";
 
 const projectStore = useProjectStore();
 

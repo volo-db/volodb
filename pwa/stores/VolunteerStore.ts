@@ -1,25 +1,33 @@
 import { defineStore } from "pinia";
-import { useRouter } from "vue-router";
-import { useRuntimeConfig } from "#app";
-import { vdbFetchData } from "@/api/api";
+// import { useRouter } from "vue-router";
+// import { useRuntimeConfig } from "#app";
+import { vdbFetchData, vdbFetchFormData } from "@/api/api";
 
-let mostRecentRequest = "";
+let mostRecentRequest: string = "";
 
 export const useVolunteerStore = defineStore("volunteerStore", () => {
-  const config = useRuntimeConfig();
-  const apiUrl = config.public.baseUrl;
-  const router = useRouter();
+  // const config = useRuntimeConfig();
+  // const apiUrl = config.public.baseUrl;
+  // const router = useRouter();
 
-  const fetchingDocuments = ref(false);
-  const fetching = ref(false);
-  const volunteersPage = ref(null);
+  const fetchingDocuments = ref<boolean>(false);
+  const fetching = ref<boolean>(false);
+  const volunteersPage = ref(null as volunteersPage | null);
   const volunteerNotes = ref(null);
-  const selectedVolunteer = ref(null);
-  const selectedVolunteerContacts = ref(null);
-  const selectedVolunteerAddresses = ref(null);
-  const selectedVolunteerRelevantContract = ref(null);
-  const volunteerDocuments = ref(null);
-  const volunteerDocumentTypes = ref(null);
+  const selectedVolunteer = ref<Record<string, number | string> | null>(null);
+  const selectedVolunteerContacts = ref<Record<string, number | string> | null>(
+    null
+  );
+  const selectedVolunteerAddresses = ref<Record<
+    string,
+    number | string
+  > | null>(null);
+  const selectedVolunteerRelevantContract = ref<Record<
+    string,
+    number | string
+  > | null>(null);
+  const volunteerDocuments = ref<Record<string, number | string> | null>(null);
+  const volunteerDocumentTypes = ref<DocumentsType[]>([]);
 
   const clearVolunteer = () => {
     volunteerNotes.value = null;
@@ -30,10 +38,14 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     volunteerDocuments.value = null;
   };
 
-  async function setVolunteer(volunteer) {
-    fetching = true;
+  async function setVolunteer(volunteer: Record<string, number | string>) {
+    fetching.value = true;
     try {
-      selectedVolunteer = await vdbFetchData("volunteers", "POST", volunteer);
+      selectedVolunteer.value = await vdbFetchData(
+        "volunteers",
+        "POST",
+        volunteer
+      );
     } catch (error) {
       console.error(error);
       throw error;
@@ -42,7 +54,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function getVolunteer(volunteerId) {
+  async function getVolunteer(volunteerId: number) {
     //clear selected volunteer
     selectedVolunteer.value = null;
 
@@ -74,7 +86,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function getVolunteers(queryObj) {
+  async function getVolunteers(queryObj: QueryObj) {
     const thisRequest = `volunteers?page=${queryObj.page || 0}&pageSize=${
       queryObj.pageSize || 10
     }&sortBy=${queryObj.sortBy || "person.lastname"}&sortOrder=${
@@ -85,9 +97,9 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     fetching.value = true;
 
     try {
-      const volunteersPage = await vdbFetchData(thisRequest, "GET");
+      const response = await vdbFetchData(thisRequest, "GET");
       if (mostRecentRequest != thisRequest) return;
-      volunteersPage.value = volunteersPage;
+      volunteersPage.value = response;
     } catch (error) {
       console.error(error);
     } finally {
@@ -95,7 +107,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function getVolunteerNotes(queryObj) {
+  async function getVolunteerNotes(queryObj: QueryObj) {
     const thisRequest = `volunteers/${queryObj.volunteerId}/notes?sortBy=${
       queryObj.sortBy || "timestamp"
     }&sortOrder=${queryObj.sortOrder || "desc"}&search=${
@@ -117,7 +129,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function getVolunteerDocuments(queryObj) {
+  async function getVolunteerDocuments(queryObj: QueryObj) {
     const thisRequest = `volunteers/${queryObj.volunteerId}/documents?sortBy=${
       queryObj.sortBy || "timestamp"
     }&sortOrder=${queryObj.sortOrder || "desc"}&search=${
@@ -138,7 +150,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function getVolunteerAddresses(volunteerId) {
+  async function getVolunteerAddresses(volunteerId: number) {
     const thisRequest = `volunteers/${volunteerId}/addresses`;
 
     mostRecentRequest = thisRequest;
@@ -156,7 +168,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function setVolunteerAddresses(volunteerId, address) {
+  async function setVolunteerAddresses(volunteerId: number, address: any) {
     const method = address.id ? "PATCH" : "POST";
 
     const thisRequest = `volunteers/${volunteerId}/addresses${
@@ -177,12 +189,12 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function deleteVolunteerAddress(addressId) {
+  async function deleteVolunteerAddress(addressId: number) {
     fetching.value = true;
 
     try {
       await vdbFetchData(
-        `volunteers/${selectedVolunteer.value.id}/addresses/${addressId}`,
+        `volunteers/${selectedVolunteer.value?.id}/addresses/${addressId}`,
         "DELETE"
       );
     } catch (error) {
@@ -192,12 +204,12 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function setNote(note, id) {
+  async function setNote(note: string, id: number) {
     fetching.value = true;
     if (id) {
       try {
         await vdbFetchData(
-          "volunteers/" + selectedVolunteer.value.id + "/notes/" + id,
+          "volunteers/" + selectedVolunteer.value?.id + "/notes/" + id,
           "PATCH",
           note
         );
@@ -210,7 +222,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     } else {
       try {
         await vdbFetchData(
-          "volunteers/" + selectedVolunteer.value.id + "/notes",
+          "volunteers/" + selectedVolunteer.value?.id + "/notes",
           "POST",
           note
         );
@@ -223,13 +235,16 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function setDocument(formData, id) {
+  async function setDocument(
+    formData: Record<string, number | string>,
+    id: number
+  ) {
     fetchingDocuments.value = true;
 
     if (id) {
       try {
         await vdbFetchData(
-          "volunteers/" + selectedVolunteer.value.id + "/documents/" + id,
+          "volunteers/" + selectedVolunteer.value?.id + "/documents/" + id,
           "PATCH",
           formData
         );
@@ -242,7 +257,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     } else {
       try {
         await vdbFetchFormData(
-          "volunteers/" + selectedVolunteer.value.id + "/documents",
+          "volunteers/" + selectedVolunteer.value?.id + "/documents",
           "POST",
           formData
         );
@@ -250,16 +265,16 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
         console.error(error);
         throw error;
       } finally {
-        fetchingDocuments = false;
+        fetchingDocuments.value = false;
       }
     }
   }
 
-  async function deleteNote(id) {
-    fetching = true;
+  async function deleteNote(id: number) {
+    fetching.value = true;
     try {
       await vdbFetchData(
-        "volunteers/" + selectedVolunteer.value.id + "/notes/" + id,
+        "volunteers/" + selectedVolunteer.value?.id + "/notes/" + id,
         "DELETE"
       );
     } catch (error) {
@@ -270,7 +285,10 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function editVolunteer(volunteer, id) {
+  async function editVolunteer(
+    volunteer: Record<string, number | string>,
+    id: number
+  ) {
     fetching.value = true;
 
     try {
@@ -283,7 +301,10 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function editVolunteerAvatar(formData, id) {
+  async function editVolunteerAvatar(
+    formData: Record<string, number | string>,
+    id: number
+  ) {
     fetching.value = true;
 
     try {
@@ -300,11 +321,11 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     }
   }
 
-  async function deleteDocument(id) {
+  async function deleteDocument(id: number) {
     fetching.value = true;
     try {
       await vdbFetchFormData(
-        "volunteers/" + selectedVolunteer.value.id + "/documents/" + id,
+        "volunteers/" + selectedVolunteer.value?.id + "/documents/" + id,
         "DELETE"
       );
     } catch (error) {
@@ -316,7 +337,7 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
   }
 
   async function getVolunteerDocumentTypes() {
-    volunteerDocumentTypes.value = null;
+    volunteerDocumentTypes.value = [];
 
     fetching.value = true;
     try {
@@ -337,8 +358,10 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     let list = [];
 
     for (let key of Object.keys(volunteerDocumentTypes.value)) {
-      list.push(volunteerDocumentTypes[key].value.name.value);
+      const index = parseInt(key, 10);
+      list.push(volunteerDocumentTypes.value[index].description);
     }
+
     return list;
   };
 
@@ -348,9 +371,9 @@ export const useVolunteerStore = defineStore("volunteerStore", () => {
     let titles = [];
 
     for (let key of Object.keys(volunteerDocumentTypes.value)) {
-      titles.push(volunteerDocumentTypes[key].value.description);
+      const index = parseInt(key, 10);
+      titles.push(volunteerDocumentTypes.value[index].description);
     }
-    return titles;
   };
 
   return {

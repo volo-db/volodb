@@ -9,7 +9,7 @@
         :class="{
           border: address.status === 'ACTIVE',
           'font-bold': address.status === 'ACTIVE',
-          'order-first': address.status === 'ACTIVE'
+          'order-first': address.status === 'ACTIVE',
         }"
       >
         <div class="m-1">
@@ -37,7 +37,10 @@
       </div>
     </div>
     <div class="pt-3 flex flex-col items-center text-2xl text-vologray-800">
-      <button @click.prevent="addressModal = true" class="hover:text-voloblue-200">
+      <button
+        @click.prevent="addressModal = true"
+        class="hover:text-voloblue-200"
+      >
         <IconPlus />
       </button>
     </div>
@@ -52,48 +55,56 @@
 </template>
 
 <script>
-import AddressFormular from './AddressFormular.vue'
-import ContainerModal from './ContainerModal.vue'
-import { useVolunteerStore } from '@/stores/VolunteerStore'
-import IconPlus from './IconPlus.vue'
-import IconPenEdit from './IconPenEdit.vue'
-import IconTrash from './IconTrash.vue'
+import AddressFormular from "./AddressFormular.vue";
+import ContainerModal from "./ContainerModal.vue";
+import { useVolunteerStore } from "~/stores/VolunteerStore";
+import IconPlus from "./IconPlus.vue";
+import IconPenEdit from "./IconPenEdit.vue";
+import IconTrash from "./IconTrash.vue";
 export default {
-  components: { IconPlus, ContainerModal, AddressFormular, IconPenEdit, IconTrash },
+  components: {
+    IconPlus,
+    ContainerModal,
+    AddressFormular,
+    IconPenEdit,
+    IconTrash,
+  },
   setup() {
-    const volunteerStore = useVolunteerStore()
+    const volunteerStore = useVolunteerStore();
 
-    return { volunteerStore }
+    return { volunteerStore };
   },
   data() {
     return {
       addressModal: false,
       addresses: null,
-      selectedAddress: null
-    }
+      selectedAddress: null,
+    };
   },
   methods: {
     async updateAddresses() {
       // this.selectedAddress = null
-      await this.volunteerStore.getVolunteer(this.$route.params.volunteerId)
-      this.addresses = this.volunteerStore.selectedVolunteerAddresses
+      await this.volunteerStore.getVolunteer(this.$route.params.volunteerId);
+      this.addresses = this.volunteerStore.selectedVolunteerAddresses;
     },
     async deleteAdress(address) {
-      if (address.status === 'ACTIVE') {
+      if (address.status === "ACTIVE") {
         window.alert(
-          'Es ist nicht möglich die Hauptadresse zu löschen. Markiere zunächst eine andere Adresse als Hauptadresse oder lege eine solche an.'
-        )
-        return
+          "Es ist nicht möglich die Hauptadresse zu löschen. Markiere zunächst eine andere Adresse als Hauptadresse oder lege eine solche an."
+        );
+        return;
       }
-      const confirm = window.confirm(`Möchtest du die Adresse "${address.name}" wirklich löschen?"`)
+      const confirm = window.confirm(
+        `Möchtest du die Adresse "${address.name}" wirklich löschen?"`
+      );
       if (confirm) {
-        await this.volunteerStore.deleteVolunteerAddress(address.id)
-        this.updateAddresses()
+        await this.volunteerStore.deleteVolunteerAddress(address.id);
+        this.updateAddresses();
       }
-    }
+    },
   },
   async beforeMount() {
-    await this.updateAddresses()
-  }
-}
+    await this.updateAddresses();
+  },
+};
 </script>

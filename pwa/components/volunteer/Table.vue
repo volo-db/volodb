@@ -37,8 +37,8 @@
           <tr
             v-for="(volunteer, index) of volunteerStore.volunteersPage.content"
             class="border-b h-14 cursor-pointer hover:bg-gray-50 hover:text-voloblue-100"
-            :key="volunteer.id"
-            @click="goToDetails(volunteer.id)"
+            :key="volunteer.person.id"
+            @click="goToDetails(volunteer.person.id)"
           >
             <td
               class="font-bold pl-4 truncate"
@@ -86,16 +86,16 @@
   </ContainerModal> -->
 </template>
 
-<script setup>
-import { useVolunteerStore } from "@/stores/VolunteerStore";
+<script setup lang="ts">
+import { useVolunteerStore } from "~/stores/VolunteerStore";
 
-import { ref, watch, computed } from "vue";
-import { useRouter } from "vue-router";
+// import { ref, watch, computed } from "vue";
+// import { useRouter } from "vue-router";
 
 const router = useRouter();
 const volunteerStore = useVolunteerStore();
 
-const searchQuery = ref({ type: string, default: "" });
+// const searchQuery = ref({ type: string, default: "" });
 const tableHead = ref([
   "Name",
   "Vorname",
@@ -104,6 +104,7 @@ const tableHead = ref([
   "Unterlagen",
   "gebuchte Seminare",
 ]);
+
 const sortParameter = [
   "person.lastname",
   "person.firstname",
@@ -112,23 +113,24 @@ const sortParameter = [
   "documents",
   "seminars",
 ];
-const sortOrder = ref("asc");
-const sortBy = ref("person.lastname");
-const page = ref(0);
-const pageSize = ref(15);
 
-const props = defineProps({
-  searchQuery: {
-    type: String,
-    default: "",
-  },
-});
+let sortOrder = ref<"asc" | "desc">("asc");
+let sortBy = ref<string>("person.lastname");
+let page = ref<number>(0);
+let pageSize = ref<number>(15);
 
-const goToDetails = (volunteerId) => {
-  router.push({ path: `/volunteerdetail/${volunteerId}` });
+const props = defineProps<{ searchQuery: string }>();
+
+const goToDetails = (volunteerId: number) => {
+  console.log(volunteerId);
+  navigateTo({ name: "volunteerdetail-id", params: { id: volunteerId } });
+  // router.push(`volunteerdetail/${volunteerId}`);
 };
 
-const updateVolunteerPage = (pageNumber) => {
+const updateVolunteerPage = (pageNumber: number): void => {
+  if (!volunteerStore.volunteersPage) return;
+  if (!volunteerStore.volunteersPage.pageable) return;
+
   volunteerStore.volunteersPage.pageable.pageNumber = pageNumber;
   let params = {
     sortOrder: sortOrder.value,
@@ -139,38 +141,38 @@ const updateVolunteerPage = (pageNumber) => {
   volunteerStore.getVolunteers(params);
 };
 
-const updateVolunteerListLenght = (length) => {
+const updateVolunteerListLenght = (length: number): void => {
   pageSize.value = length;
-  volunteerStore.volunteersPage.pageable.pageNumber = 0;
+  volunteerStore.volunteersPage?.pageable.pageNumber ?? 0;
   let params = {
     sortOrder: sortOrder.value,
     sortBy: sortBy.value,
-    page: volunteerStore.volunteersPage.pageable.pageNumber,
+    page: volunteerStore.volunteersPage?.pageable.pageNumber ?? 0,
     pageSize: length,
   };
   volunteerStore.getVolunteers(params);
 };
 
-const sortVolunteersList = (sortBy) => {
-  if (sortBy.value === sortBy) {
+const sortVolunteersList = (sortKey: string): void => {
+  if (sortBy.value === sortKey) {
     // Toggle sort order if the sortBy is the same
     sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
   } else {
     // Keep the current sort order when changing the sortBy
-    sortBy.value = sortBy;
+    sortBy.value = sortKey;
   }
 
   getVolunteers();
 };
 
-const getVolunteers = async (params) => {
+const getVolunteers = async (params?: QueryObj) => {
   if (!params)
     params = {
       sortOrder: sortOrder.value,
       sortBy: sortBy.value,
       page: page.value,
       pageSize: pageSize.value,
-      search: searchQuery.value,
+      search: props.searchQuery,
     };
 
   try {
@@ -187,9 +189,9 @@ const getVolunteers = async (params) => {
 };
 
 watch(
-  searchQuery.value,
+  () => props.searchQuery,
   async () => {
-    await volunteerStore.getVolunteers();
+    await getVolunteers();
   },
   { immediate: true }
 );

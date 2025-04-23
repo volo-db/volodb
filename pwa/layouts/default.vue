@@ -1,14 +1,6 @@
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
-</template>
-
-<!-- <template>
   <div class="grid grid-cols-[70px,auto] h-screen divide-x overflow-hidden">
     <NavigationBar />
-    <NuxtPage />
+    <slot></slot>
   </div>
 </template>
-
-<script setup></script> -->

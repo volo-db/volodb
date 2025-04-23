@@ -1,6 +1,11 @@
 <template>
-  <section class="w-[70vw] max-w-[850px] min-w-[400px]" @keydown.esc="$emit('cancel')">
-    <header class="flex justify-center p-5 border-solid border-b border-vologray-200">
+  <section
+    class="w-[70vw] max-w-[850px] min-w-[400px]"
+    @keydown.esc="$emit('cancel')"
+  >
+    <header
+      class="flex justify-center p-5 border-solid border-b border-vologray-200"
+    >
       <h2 class="text-[20px] text-bold font-medium">{{ title }}</h2>
     </header>
     <main class="p-8">
@@ -33,9 +38,7 @@
               id="name"
               :required="true"
               :hasError="validationErr.name"
-
               v-model="formData.document.name"
-
               ref="name"
             />
             <FormularSelectBox
@@ -49,9 +52,7 @@
             />
 
             <FormularFileInput
-
               v-if="!edit"
-
               name="document"
               label="Dokument"
               type="file"
@@ -70,23 +71,34 @@
         <IconSpinner />speichere Dokument...
       </div>
     </main>
-    <footer class="flex justify-between p-6 border-solid border-t border-vologray-200">
-      <ButtonStandard @click.prevent="$emit('cancel')" :gray="true">Abbrechen</ButtonStandard>
-      <ButtonStandard type="submit" form="new-document">{{ submitButtonText }}</ButtonStandard>
+    <footer
+      class="flex justify-between p-6 border-solid border-t border-vologray-200"
+    >
+      <ButtonStandard @click.prevent="$emit('cancel')" :gray="true"
+        >Abbrechen</ButtonStandard
+      >
+      <ButtonStandard type="submit" form="new-document">{{
+        submitButtonText
+      }}</ButtonStandard>
     </footer>
   </section>
 </template>
 
 <script>
-import ButtonStandard from './ButtonStandard.vue'
-import { useVolunteerStore } from '@/stores/VolunteerStore'
-import FormularInput from './FormularInput.vue'
-import FormularSelectBox from './FormularSelectBox.vue'
-import IconSpinner from './IconSpinner.vue'
-import FormularFileInput from './FormularFileInput.vue'
+import ButtonStandard from "./ButtonStandard.vue";
+import { useVolunteerStore } from "~/stores/VolunteerStore";
+import FormularInput from "./FormularInput.vue";
+import FormularSelectBox from "./FormularSelectBox.vue";
+import IconSpinner from "./IconSpinner.vue";
+import FormularFileInput from "./FormularFileInput.vue";
 export default {
-
-  components: { ButtonStandard, IconSpinner, FormularInput, FormularSelectBox, FormularFileInput },
+  components: {
+    ButtonStandard,
+    IconSpinner,
+    FormularInput,
+    FormularSelectBox,
+    FormularFileInput,
+  },
 
   props: {
     title: String,
@@ -96,23 +108,23 @@ export default {
     submitButtonText: String,
     documentCopy: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
-    edit: Boolean
+    edit: Boolean,
   },
 
   setup() {
-    const volunteerStore = useVolunteerStore()
+    const volunteerStore = useVolunteerStore();
 
     return {
-      volunteerStore
-    }
+      volunteerStore,
+    };
   },
   data() {
     return {
       formData: {
         document: {},
-        documentType: {}
+        documentType: {},
       },
       documentTypes: null,
       list: [],
@@ -121,34 +133,38 @@ export default {
       validationErr: {
         file: false,
         name: false,
-        type: false
+        type: false,
       },
       formValid: false,
-      errorMessage: false
-    }
+      errorMessage: false,
+    };
   },
   methods: {
     initializeFormData() {
-      this.formData.document = JSON.parse(JSON.stringify(this.documentCopy))
+      this.formData.document = JSON.parse(JSON.stringify(this.documentCopy));
       this.formData.documentType = this.documentCopy.documentType
         ? JSON.parse(JSON.stringify(this.documentCopy.documentType))
-        : {}
+        : {};
     },
     keyPressed(e) {
-      if (e.metaKey && e.key.toLowerCase() === 'enter') this.onSubmit()
+      if (e.metaKey && e.key.toLowerCase() === "enter") this.onSubmit();
     },
     validate() {
-      this.formValid = false
-      this.validationErr.file = false
-      this.validationErr.name = false
-      this.validationErr.type = false
+      this.formValid = false;
+      this.validationErr.file = false;
+      this.validationErr.name = false;
+      this.validationErr.type = false;
       // Check if `file` is null
-      if (!this.formData.document.path) this.validationErr.file = true
-      if (!this.formData.document.name) this.validationErr.name = true
-      if (!this.formData.documentType.name) this.validationErr.type = true
+      if (!this.formData.document.path) this.validationErr.file = true;
+      if (!this.formData.document.name) this.validationErr.name = true;
+      if (!this.formData.documentType.name) this.validationErr.type = true;
 
-      if (!this.validationErr.file && !this.validationErr.name && !this.validationErr.type) {
-        this.formValid = true
+      if (
+        !this.validationErr.file &&
+        !this.validationErr.name &&
+        !this.validationErr.type
+      ) {
+        this.formValid = true;
       }
     },
     getDocumentTypeId() {
@@ -156,60 +172,60 @@ export default {
         ? Object.values(this.documentTypes).find(
             (type) => type.name === this.formData.documentType.name
           )
-        : null
-      return documentType ? documentType.id : null
+        : null;
+      return documentType ? documentType.id : null;
     },
     async onSubmit() {
-      this.errorMessage = false
+      this.errorMessage = false;
 
       if (this.edit) {
-        let id = this.formData.document.id
+        let id = this.formData.document.id;
         try {
           let formData = {
             name: this.formData.document.name,
-            documentType: this.getDocumentTypeId()
-          }
-          await this.volunteerStore.setDocument(formData, id)
+            documentType: this.getDocumentTypeId(),
+          };
+          await this.volunteerStore.setDocument(formData, id);
         } catch (error) {
-          this.errorMessage = true
-          console.error('Error uploading file:', error)
+          this.errorMessage = true;
+          console.error("Error uploading file:", error);
         }
 
-        this.$emit('saved')
+        this.$emit("saved");
       }
 
-      this.validate()
+      this.validate();
       if (this.formValid) {
-        let id = this.formData.document.id
+        let id = this.formData.document.id;
         try {
-          const formData = new FormData()
-          formData.append('document', this.formData.document.path)
-          formData.append('documentName', this.formData.document.name)
-          formData.append('documentTypeId', this.formData.documentType.id)
+          const formData = new FormData();
+          formData.append("document", this.formData.document.path);
+          formData.append("documentName", this.formData.document.name);
+          formData.append("documentTypeId", this.formData.documentType.id);
 
-          await this.volunteerStore.setDocument(formData, id)
+          await this.volunteerStore.setDocument(formData, id);
         } catch (error) {
-          this.errorMessage = true
-          console.error('Error uploading file:', error)
+          this.errorMessage = true;
+          console.error("Error uploading file:", error);
         }
-        this.$emit('saved')
+        this.$emit("saved");
       }
-    }
+    },
   },
   watch: {
-    'formData.documentType.name'() {
-      this.formData.documentType.id = this.getDocumentTypeId()
-    }
+    "formData.documentType.name"() {
+      this.formData.documentType.id = this.getDocumentTypeId();
+    },
   },
 
   async mounted() {
     if (this.edit) {
-      this.initializeFormData()
+      this.initializeFormData();
     }
-    await this.volunteerStore.getVolunteerDocumentTypes()
-    this.documentTypes = this.volunteerStore.volunteerDocumentTypes
+    await this.volunteerStore.getVolunteerDocumentTypes();
+    this.documentTypes = this.volunteerStore.volunteerDocumentTypes;
 
-    this.$refs.name.focus()
-  }
-}
+    this.$refs.name.focus();
+  },
+};
 </script>

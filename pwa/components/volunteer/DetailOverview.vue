@@ -1,5 +1,7 @@
 <template>
-  <div class="flex-none flex flex-col justify-start items-center p-8 w-[400px] overflow-y-auto">
+  <div
+    class="flex-none flex flex-col justify-start items-center p-8 w-[400px] overflow-y-auto"
+  >
     <div v-if="volunteerStore.fetching" id="skeleton-loader"></div>
     <div class="w-full" v-if="volunteer">
       <div>
@@ -22,13 +24,17 @@
               <!-- Birthday and -place -->
               <p v-if="volunteer.birthday" class="text-sm">
                 geboren am
-                <span class="font-bold">{{ getPropperDateString(volunteer.birthday) }}</span>
+                <span class="font-bold">{{
+                  getPropperDateString(volunteer.birthday)
+                }}</span>
                 in
                 <span class="font-bold">{{ volunteer.birthplace }}</span>
               </p>
             </div>
             <!-- pen to edit name, gender, birthdate -->
-            <div class="flex absolute inset-0 justify-end items-center pointer-events-none">
+            <div
+              class="flex absolute inset-0 justify-end items-center pointer-events-none"
+            >
               <button
                 class="hidden group-hover:inline p-4 -m-4 pointer-events-auto"
                 @click="newNameModal = true"
@@ -44,11 +50,17 @@
             <span class="font-medium">{{ relevantContract.project.name }}</span>
           </p>
           <!-- Status-Pill -->
-          <div class="flex flex-row border-2 border-voloblue-100 rounded-lg text-sm">
-            <span class="px-1 pt-[1px] text-voloblue-100" v-if="relevantContract">{{
-              relevantContract.program
+          <div
+            class="flex flex-row border-2 border-voloblue-100 rounded-lg text-sm"
+          >
+            <span
+              class="px-1 pt-[1px] text-voloblue-100"
+              v-if="relevantContract"
+              >{{ relevantContract.program }}</span
+            >
+            <span class="px-1 pt-[1px] text-white bg-voloblue-100">{{
+              volunteer.status
             }}</span>
-            <span class="px-1 pt-[1px] text-white bg-voloblue-100">{{ volunteer.status }}</span>
           </div>
         </header>
         <article class="flex flex-col gap-8 w-full self-start mt-6">
@@ -59,7 +71,9 @@
           <!-- address section -->
           <VolunteerDetailOverviewAddresses />
           <details v-if="false" class="mb-2">
-            <summary class="font-medium cursor-pointer">FW-Dienstverlauf</summary>
+            <summary class="font-medium cursor-pointer">
+              FW-Dienstverlauf
+            </summary>
             <ul class="flex flex-col gap-3 pt-3">
               <li>Station 1</li>
               <li>Station 2</li>
@@ -83,25 +97,25 @@
   </ContainerModal>
 </template>
 <script>
-import { useVolunteerStore } from '@/stores/VolunteerStore.js'
-import ContainerModal from '@/components/ContainerModal.vue'
-import BasicPersonalDataFormular from '@/components/BasicPersonalDataFormular.vue'
-import VolunteerDetailOverviewAvatar from './VolunteerDetailOverviewAvatar.vue'
-import VolunteerDetailOverviewAddresses from './VolunteerDetailOverviewAddresses.vue'
-import VolunteerDetailOverviewContact from './VolunteerDetailOverviewContact.vue'
-import IconPenEdit from '@/components/IconPenEdit.vue'
-import { getPropperDateString } from '@/utils/dateAndTime'
+import { useVolunteerStore } from "~/stores/VolunteerStore.js";
+import ContainerModal from "@/components/ContainerModal.vue";
+import BasicPersonalDataFormular from "@/components/BasicPersonalDataFormular.vue";
+import VolunteerDetailOverviewAvatar from "./DetailOverviewAvatar.vue";
+import VolunteerDetailOverviewAddresses from "./DetailOverviewAddresses.vue";
+import VolunteerDetailOverviewContact from "./DetailOverviewContact.vue";
+import IconPenEdit from "@/components/IconPenEdit.vue";
+import { getPropperDateString } from "@/utils/dateAndTime";
 
 export default {
   setup() {
-    const volunteerStore = useVolunteerStore()
-    const baseUrl = import.meta.env.VITE_BASE_URL
+    const volunteerStore = useVolunteerStore();
+    const baseUrl = import.meta.env.VITE_BASE_URL;
 
     return {
       volunteerStore,
       baseUrl,
-      getPropperDateString
-    }
+      getPropperDateString,
+    };
   },
   components: {
     BasicPersonalDataFormular,
@@ -109,7 +123,7 @@ export default {
     IconPenEdit,
     VolunteerDetailOverviewAvatar,
     VolunteerDetailOverviewAddresses,
-    VolunteerDetailOverviewContact
+    VolunteerDetailOverviewContact,
   },
   data() {
     return {
@@ -118,54 +132,64 @@ export default {
       addresses: null,
       relevantContract: null,
       hover: false,
-      newNameModal: false
-    }
+      newNameModal: false,
+    };
   },
   methods: {
     async onNameSaved() {
-      this.newNameModal = false
-      await this.volunteerStore.getVolunteer(this.volunteerStore.selectedVolunteer.id)
-      this.volunteer = this.volunteerStore.selectedVolunteer
+      this.newNameModal = false;
+      await this.volunteerStore.getVolunteer(
+        this.volunteerStore.selectedVolunteer.id
+      );
+      this.volunteer = this.volunteerStore.selectedVolunteer;
     },
     async editAvatar(event) {
-      const file = event.target.files[0]
+      const file = event.target.files[0];
 
       if (file) {
-        const formData = new FormData()
-        formData.append('avatar', file)
+        const formData = new FormData();
+        formData.append("avatar", file);
 
         try {
-          await this.volunteerStore.editVolunteerAvatar(formData, this.$route.params.volunteerId)
+          await this.volunteerStore.editVolunteerAvatar(
+            formData,
+            this.$route.params.volunteerId
+          );
         } catch (error) {
-          console.error('Error editing Avatar: ', error)
+          console.error("Error editing Avatar: ", error);
         } finally {
-          await this.volunteerStore.getVolunteer(this.$route.params.volunteerId)
-          this.volunteer = this.volunteerStore.selectedVolunteer
+          await this.volunteerStore.getVolunteer(
+            this.$route.params.volunteerId
+          );
+          this.volunteer = this.volunteerStore.selectedVolunteer;
         }
       }
-    }
+    },
   },
   computed: {
     // Computed property to generate a new avatar src URL with a cache-busting query parameter
     avatarSrc() {
-      return this.volunteer ? `${this.baseUrl}/files/${this.volunteer.avatar}?t=${Date.now()}` : ''
-    }
+      return this.volunteer
+        ? `${this.baseUrl}/files/${this.volunteer.avatar}?t=${Date.now()}`
+        : "";
+    },
   },
 
   async beforeMount() {
-    await this.volunteerStore.getVolunteer(this.$route.params.volunteerId)
-    this.volunteer = this.volunteerStore.selectedVolunteer
-    this.contacts = this.volunteerStore.selectedVolunteerContacts
-    this.addresses = this.volunteerStore.selectedVolunteerAddresses
-    this.relevantContract = this.volunteerStore.selectedVolunteerRelevantContract
+    await this.volunteerStore.getVolunteer(this.$route.params.volunteerId);
+    this.volunteer = this.volunteerStore.selectedVolunteer;
+    this.contacts = this.volunteerStore.selectedVolunteerContacts;
+    this.addresses = this.volunteerStore.selectedVolunteerAddresses;
+    this.relevantContract =
+      this.volunteerStore.selectedVolunteerRelevantContract;
   },
   watch: {
     volunteer(newVal) {
       if (newVal) {
         // Automatically updates the `volunteer` property based on the store's `selectedVolunteer`
-        this.volunteer = this.volunteerStore.selectedVolunteer
+        this.volunteer = this.volunteerStore.selectedVolunteer;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

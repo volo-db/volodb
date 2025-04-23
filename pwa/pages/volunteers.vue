@@ -25,12 +25,12 @@
 </template>
 
 <script setup>
-import { useVolunteerStore } from "@/stores/VolunteerStore";
+import { useVolunteerStore } from "~/stores/VolunteerStore";
 import debounce from "lodash.debounce";
 
-const router = useRouter();
-const route = useRoute();
-// const volunteerStore = useVolunteerStore();
+// const router = useRouter();
+// const route = useRoute();
+const volunteerStore = useVolunteerStore();
 const newVolunteerModal = ref(false);
 const searchQuery = ref("");
 const debouncedSearchQuery = ref("");
@@ -40,6 +40,7 @@ const debouncedSearch = debounce((input, searchFunction) => {
 }, 1000);
 
 const redirectToCreatedVolunteer = (volunteerId) => {
+  // navigateTo({ name: "volunteerdetail-id" }); statt:
   router.push("/volunteers/" + volunteerId);
   newVolunteerModal.value = false;
 };

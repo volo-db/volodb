@@ -1,6 +1,11 @@
 <template>
-  <section class="w-[70vw] max-w-[850px] min-w-[400px]" @keydown.esc="$emit('cancel')">
-    <header class="flex justify-center p-5 border-solid border-b border-vologray-200">
+  <section
+    class="w-[70vw] max-w-[850px] min-w-[400px]"
+    @keydown.esc="$emit('cancel')"
+  >
+    <header
+      class="flex justify-center p-5 border-solid border-b border-vologray-200"
+    >
       <h2 class="text-[20px] text-bold font-medium">{{ title }}</h2>
     </header>
     <main class="p-8">
@@ -31,7 +36,12 @@
             <!-- for editing a note -->
 
             <FormularSelectBox
-              :list="['Eingehender Anruf', 'Ausgehender Anruf', 'E-Mail', 'Notiz']"
+              :list="[
+                'Eingehender Anruf',
+                'Ausgehender Anruf',
+                'E-Mail',
+                'Notiz',
+              ]"
               label="Typ"
               id="type"
               name="type"
@@ -52,101 +62,116 @@
           </form>
         </div>
       </div>
-      <div v-if="volunteerStore.fetching" class="flex gap-2 justify-center items-center text-md">
+      <div
+        v-if="volunteerStore.fetching"
+        class="flex gap-2 justify-center items-center text-md"
+      >
         <IconSpinner />
         <p>{{ loadingText }}</p>
       </div>
     </main>
-    <footer class="flex justify-between p-6 border-solid border-t border-vologray-200">
-      <ButtonStandard @click.prevent="$emit('cancel')" :gray="true">Abbrechen</ButtonStandard>
-      <ButtonStandard type="submit" :form="id">{{ submitButtonText }}</ButtonStandard>
+    <footer
+      class="flex justify-between p-6 border-solid border-t border-vologray-200"
+    >
+      <ButtonStandard @click.prevent="$emit('cancel')" :gray="true"
+        >Abbrechen</ButtonStandard
+      >
+      <ButtonStandard type="submit" :form="id">{{
+        submitButtonText
+      }}</ButtonStandard>
     </footer>
   </section>
 </template>
 
 <script>
-import ButtonStandard from './ButtonStandard.vue'
-import { useVolunteerStore } from '@/stores/VolunteerStore'
-import FormularSelectBox from './FormularSelectBox.vue'
-import FormularTextarea from './FormularTextarea.vue'
-import IconSpinner from './IconSpinner.vue'
+import ButtonStandard from "./ButtonStandard.vue";
+import { useVolunteerStore } from "~/stores/VolunteerStore";
+import FormularSelectBox from "./FormularSelectBox.vue";
+import FormularTextarea from "./FormularTextarea.vue";
+import IconSpinner from "./IconSpinner.vue";
 
 export default {
-  components: { ButtonStandard, FormularSelectBox, FormularTextarea, IconSpinner },
+  components: {
+    ButtonStandard,
+    FormularSelectBox,
+    FormularTextarea,
+    IconSpinner,
+  },
   props: {
     title: String,
     description: String,
     id: String,
     loadingText: String,
     submitButtonText: String,
-    noteCopy: Object
+    noteCopy: Object,
   },
   setup() {
-    const volunteerStore = useVolunteerStore()
+    const volunteerStore = useVolunteerStore();
 
     return {
-      volunteerStore
-    }
+      volunteerStore,
+    };
   },
   data() {
     return {
       formData: {
-        note: { ...this.noteCopy }
+        note: { ...this.noteCopy },
       },
       validationErr: {
         type: false,
-        note: false
+        note: false,
       },
 
       formValid: false,
       errorMessage: false,
-      cmdPressed: true
-    }
+      cmdPressed: true,
+    };
   },
   methods: {
     keyPressed(e) {
-      if (e.metaKey && e.key.toLowerCase() === 'enter') this.onSubmit()
+      if (e.metaKey && e.key.toLowerCase() === "enter") this.onSubmit();
     },
     validate() {
-      this.formValid = false
-      this.validationErr.type = false
-      this.validationErr.note = false
+      this.formValid = false;
+      this.validationErr.type = false;
+      this.validationErr.note = false;
 
-      if (!this.formData.note.type) this.validationErr.type = true
-      if (!this.formData.note.note) this.validationErr.note = true
+      if (!this.formData.note.type) this.validationErr.type = true;
+      if (!this.formData.note.note) this.validationErr.note = true;
 
-      if (!this.validationErr.type && !this.validationErr.note) this.formValid = true
+      if (!this.validationErr.type && !this.validationErr.note)
+        this.formValid = true;
     },
     async onSubmit() {
-      this.errorMessage = false
+      this.errorMessage = false;
 
-      this.validate()
+      this.validate();
       if (this.formValid) {
         let note = {
           type: this.formData.note.type,
-          note: this.formData.note.note.trim()
-        }
+          note: this.formData.note.note.trim(),
+        };
 
-        let id = this.formData.note.id
+        let id = this.formData.note.id;
 
         try {
-          await this.volunteerStore.setNote(note, id)
+          await this.volunteerStore.setNote(note, id);
         } catch (error) {
-          console.error(error)
+          console.error(error);
 
           // Showing error message just for 5 seconds
-          this.errorMessage = true
+          this.errorMessage = true;
           setTimeout(() => {
-            this.errorMessage = false
-          }, 5000)
-          return
+            this.errorMessage = false;
+          }, 5000);
+          return;
         }
-        this.$emit('saved')
+        this.$emit("saved");
       }
-    }
+    },
   },
   mounted() {
-    this.$refs.note.focus()
-  }
-}
+    this.$refs.note.focus();
+  },
+};
 </script>

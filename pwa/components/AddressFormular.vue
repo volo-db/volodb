@@ -1,6 +1,11 @@
 <template>
-  <section class="w-[70vw] max-w-[850px] min-w-[400px]" @keydown.esc="$emit('close')">
-    <header class="flex justify-center p-5 border-solid border-b border-vologray-200">
+  <section
+    class="w-[70vw] max-w-[850px] min-w-[400px]"
+    @keydown.esc="$emit('close')"
+  >
+    <header
+      class="flex justify-center p-5 border-solid border-b border-vologray-200"
+    >
       <h2 class="text-[20px] text-bold font-medium">
         Neue Adresse für {{ volunteerStore.selectedVolunteer.person.firstname }}
       </h2>
@@ -83,7 +88,9 @@
                 v-model="formData.primaryAddress"
                 :disabled="firstAddress"
               />
-              <label class="text-vologray-500 font-normal" for="primaryAddressYes"
+              <label
+                class="text-vologray-500 font-normal"
+                for="primaryAddressYes"
                 >Hauptadresse?
               </label>
             </div>
@@ -97,40 +104,46 @@
         <IconSpinner />speichere daten...
       </div>
     </main>
-    <footer class="flex justify-between p-6 border-solid border-t border-vologray-200">
-      <ButtonStandard @click.prevent="$emit('close')" :gray="true">Abbrechen</ButtonStandard>
+    <footer
+      class="flex justify-between p-6 border-solid border-t border-vologray-200"
+    >
+      <ButtonStandard @click.prevent="$emit('close')" :gray="true"
+        >Abbrechen</ButtonStandard
+      >
       <ButtonStandard type="submit" form="new-volunteer"
-        >Addresse {{ address ? 'speichern' : 'hinzufügen' }}</ButtonStandard
+        >Addresse {{ address ? "speichern" : "hinzufügen" }}</ButtonStandard
       >
     </footer>
   </section>
 </template>
 <script>
-import ButtonStandard from './ButtonStandard.vue'
-import { useVolunteerStore } from '@/stores/VolunteerStore'
-import { useCountryStore } from '@/stores/CountryStore'
-import FormularInput from './FormularInput.vue'
-import FormularSelectBox from './FormularSelectBox.vue'
-import IconSpinner from './IconSpinner.vue'
+import ButtonStandard from "./ButtonStandard.vue";
+import { useVolunteerStore } from "~/stores/VolunteerStore";
+import { useCountryStore } from "@/stores/CountryStore";
+import FormularInput from "./FormularInput.vue";
+import FormularSelectBox from "./FormularSelectBox.vue";
+import IconSpinner from "./IconSpinner.vue";
 
 export default {
   components: { ButtonStandard, IconSpinner, FormularInput, FormularSelectBox },
   setup() {
-    const volunteerStore = useVolunteerStore()
-    const countryStore = useCountryStore()
+    const volunteerStore = useVolunteerStore();
+    const countryStore = useCountryStore();
 
-    countryStore.getCountries()
-    const firstAddress = !Boolean(volunteerStore.selectedVolunteerAddresses.length)
+    countryStore.getCountries();
+    const firstAddress = !Boolean(
+      volunteerStore.selectedVolunteerAddresses.length
+    );
     return {
       volunteerStore,
       countryStore,
-      firstAddress
-    }
+      firstAddress,
+    };
   },
   props: {
     address: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
@@ -139,52 +152,52 @@ export default {
         street: false,
         postalCode: false,
         city: false,
-        country: false
+        country: false,
       },
       formData: {
-        name: this.address ? this.address.name : '',
-        careOf: this.address ? this.address.careof : '',
-        street: this.address ? this.address.street : '',
-        postalCode: this.address ? this.address.postalcode : '',
-        city: this.address ? this.address.city : '',
-        country: this.address ? this.address.country : 'Deutschland',
+        name: this.address ? this.address.name : "",
+        careOf: this.address ? this.address.careof : "",
+        street: this.address ? this.address.street : "",
+        postalCode: this.address ? this.address.postalcode : "",
+        city: this.address ? this.address.city : "",
+        country: this.address ? this.address.country : "Deutschland",
         primaryAddress: this.firstAddress
           ? true
           : this.address
-            ? this.address.status === 'ACTIVE'
-              ? true
-              : false
+          ? this.address.status === "ACTIVE"
+            ? true
             : false
+          : false,
       },
       formValid: false,
-      errorMessage: false
-    }
+      errorMessage: false,
+    };
   },
   methods: {
     validate() {
       // clear the table ;-)
-      this.formValid = false
-      this.validationErr.name = false
-      this.validationErr.street = false
-      this.validationErr.postalCode = false
-      this.validationErr.city = false
-      this.validationErr.country = false
+      this.formValid = false;
+      this.validationErr.name = false;
+      this.validationErr.street = false;
+      this.validationErr.postalCode = false;
+      this.validationErr.city = false;
+      this.validationErr.country = false;
 
       // Validate fields:
       // Name
-      if (!this.formData.name) this.validationErr.name = true
+      if (!this.formData.name) this.validationErr.name = true;
 
       // Street
-      if (!this.formData.street) this.validationErr.street = true
+      if (!this.formData.street) this.validationErr.street = true;
 
       // postalCode
-      if (!this.formData.postalCode) this.validationErr.postalCode = true
+      if (!this.formData.postalCode) this.validationErr.postalCode = true;
 
       // City
-      if (!this.formData.city) this.validationErr.city = true
+      if (!this.formData.city) this.validationErr.city = true;
 
       // Country
-      if (!this.formData.country) this.validationErr.country = true
+      if (!this.formData.country) this.validationErr.country = true;
 
       // If theres no error -> form is valid
       if (
@@ -194,46 +207,46 @@ export default {
         !this.validationErr.city &&
         !this.validationErr.country
       )
-        this.formValid = true
+        this.formValid = true;
     },
     async onSubmit() {
-      this.errorMessage = false
+      this.errorMessage = false;
 
-      this.validate()
+      this.validate();
       if (this.formValid) {
         let address = {
           id: this.address ? this.address.id : null,
-          status: this.formData.primaryAddress ? 'ACTIVE' : 'INACTIVE',
+          status: this.formData.primaryAddress ? "ACTIVE" : "INACTIVE",
           name: this.formData.name,
           careof: this.formData.careOf,
           country: this.formData.country,
           street: this.formData.street,
           postalcode: this.formData.postalCode,
-          city: this.formData.city
-        }
+          city: this.formData.city,
+        };
         try {
           await this.volunteerStore.setVolunteerAddresses(
             this.volunteerStore.selectedVolunteer.id,
             address
-          )
+          );
         } catch (error) {
-          console.error(error)
+          console.error(error);
 
           // Showing error message just for 5 seconds
-          this.errorMessage = true
+          this.errorMessage = true;
           setTimeout(() => {
-            this.errorMessage = false
-          }, 5000)
-          return
+            this.errorMessage = false;
+          }, 5000);
+          return;
         }
 
-        this.$emit('saved')
-        this.$emit('close')
+        this.$emit("saved");
+        this.$emit("close");
       }
-    }
+    },
   },
   mounted() {
-    this.$refs.addressName.focus()
-  }
-}
+    this.$refs.addressName.focus();
+  },
+};
 </script>
