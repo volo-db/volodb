@@ -13,10 +13,7 @@
   </div>
 </template>
 <script>
-import IconSearch from "../components/IconSearch.vue";
-
 export default {
-  components: { IconSearch },
   props: {
     placeholder: String,
     modelValue: {

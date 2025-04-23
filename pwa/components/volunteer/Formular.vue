@@ -96,19 +96,15 @@
   </section>
 </template>
 <script>
-import ButtonStandard from "./ButtonStandard.vue";
 import { useVolunteerStore } from "~/stores/VolunteerStore";
 import { useContactStore } from "@/stores/ContactStore";
 import { confetti } from "@/utils/confetti.js";
 import { isValidEmail } from "@/utils/validations";
 import { parsePhoneNumber, isPossiblePhoneNumber } from "libphonenumber-js";
-import FormularInput from "./FormularInput.vue";
-import FormularSelectBox from "./FormularSelectBox.vue";
-import IconSpinner from "./IconSpinner.vue";
+
 // import { volunteer } from "../types/index"
 
 export default {
-  components: { ButtonStandard, IconSpinner, FormularInput, FormularSelectBox },
   setup() {
     const volunteerStore = useVolunteerStore();
     const contactStore = useContactStore();

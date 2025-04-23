@@ -8,16 +8,18 @@ export const useUserStore = defineStore("userStore", () => {
   const apiUrl = config.public.baseUrl;
   const tokenDuration = 60 * 30;
 
+  // const user = ref(null as User | null);
+  const user = ref<User | null>(null);
+
+  const fetching = ref<boolean>(false);
+
   const token = useCookie("latestToken", {
     maxAge: tokenDuration,
     default: () => null,
   });
 
-  const user = ref(null);
-  const fetching = ref(false);
-
   // +++ login +++
-  async function login(email, password) {
+  async function login(email: string, password: string): Promise<void> {
     fetching.value = true;
     try {
       const res = await fetch(`${apiUrl}/auth/login`, {
@@ -41,7 +43,7 @@ export const useUserStore = defineStore("userStore", () => {
   }
 
   // +++ get User +++
-  async function getUser() {
+  async function getUser(): Promise<void> {
     if (!token.value) {
       console.warn("🔸 Kein Token vorhanden. getUser wird nicht ausgeführt.");
       return;
@@ -61,7 +63,7 @@ export const useUserStore = defineStore("userStore", () => {
   }
 
   // +++ logout +++
-  function logout() {
+  function logout(): void {
     token.value = null;
     user.value = null;
   }

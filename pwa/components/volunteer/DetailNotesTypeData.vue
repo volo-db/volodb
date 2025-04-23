@@ -13,22 +13,12 @@
 </template>
 
 <script>
-import IconMail from './IconMail.vue'
-import IconMemo from './IconMemo.vue'
-import IconPhoneIngoing from './IconPhoneIngoing.vue'
-import IconPhoneOutgoing from './IconPhoneOutgoing.vue'
 export default {
-  components: {
-    IconMail,
-    IconMemo,
-    IconPhoneOutgoing,
-    IconPhoneIngoing
-  },
   props: {
     type: {
       type: String,
-      required: true
-    }
-  }
-}
+      required: true,
+    },
+  },
+};
 </script>

@@ -4,7 +4,7 @@ import { defineStore } from "pinia";
 let mostRecentRequest: string = "";
 
 export const useProjectStore = defineStore("ProjectStore", () => {
-  const fetching = ref(false);
+  const fetching = ref<boolean>(false);
   const projectsPage = ref(null as ProjectsPage | null);
   const selectedProject = ref(null);
   const sortOrder = ref("asc");

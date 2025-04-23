@@ -163,18 +163,10 @@
 </template>
 
 <script>
-import IconTableSortArrows from "./IconTableSortArrows.vue";
 import { useVolunteerStore } from "~/stores/VolunteerStore";
-import { useUserStore } from "@/stores/UserStore";
-import IconArrowDownload from "./IconArrowDownload.vue";
-import ButtonStandard from "@/components/ButtonStandard.vue";
-import SearchBar from "@/components/SearchBar.vue";
+import { useUserStore } from "~/stores/UserStore";
 import debounce from "lodash.debounce";
 import ContainerModal from "@/components/ContainerModal.vue";
-import DocumentFormular from "@/components/DocumentFormular.vue";
-import IconPenEdit from "./IconPenEdit.vue";
-import IconTrash from "./IconTrash.vue";
-import IconFile from "./IconFile.vue";
 
 export default {
   setup: () => {
@@ -184,17 +176,7 @@ export default {
 
     return { volunteerStore, userStore, baseUrl };
   },
-  components: {
-    IconTableSortArrows,
-    IconArrowDownload,
-    ButtonStandard,
-    SearchBar,
-    ContainerModal,
-    DocumentFormular,
-    IconFile,
-    IconPenEdit,
-    IconTrash,
-  },
+
   data() {
     return {
       tableHead: ["Dokument", "Typ", "Name", "Datum"],

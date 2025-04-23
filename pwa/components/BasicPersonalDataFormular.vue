@@ -94,11 +94,7 @@
 </template>
 
 <script>
-import FormularInput from "./FormularInput.vue";
-import FormularSelectBox from "./FormularSelectBox.vue";
-import ButtonStandard from "./ButtonStandard.vue";
 import { useVolunteerStore } from "~/stores/VolunteerStore";
-import IconSpinner from "./IconSpinner.vue";
 
 export default {
   setup() {
@@ -108,7 +104,7 @@ export default {
       volunteerStore,
     };
   },
-  components: { FormularInput, IconSpinner, ButtonStandard, FormularSelectBox },
+
   props: {
     lastnameCopy: String,
     firstnameCopy: String,

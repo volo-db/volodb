@@ -84,19 +84,9 @@
 </template>
 
 <script>
-import ButtonStandard from "./ButtonStandard.vue";
 import { useVolunteerStore } from "~/stores/VolunteerStore";
-import FormularSelectBox from "./FormularSelectBox.vue";
-import FormularTextarea from "./FormularTextarea.vue";
-import IconSpinner from "./IconSpinner.vue";
 
 export default {
-  components: {
-    ButtonStandard,
-    FormularSelectBox,
-    FormularTextarea,
-    IconSpinner,
-  },
   props: {
     title: String,
     description: String,

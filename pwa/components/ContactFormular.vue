@@ -84,16 +84,11 @@
   </section>
 </template>
 <script>
-import ButtonStandard from "./ButtonStandard.vue";
 import { useContactStore } from "@/stores/ContactStore";
 import { useVolunteerStore } from "~/stores/VolunteerStore";
 import { parsePhoneNumber, isPossiblePhoneNumber } from "libphonenumber-js";
-import FormularInput from "./FormularInput.vue";
-import FormularSelectBox from "./FormularSelectBox.vue";
-import IconSpinner from "./IconSpinner.vue";
 
 export default {
-  components: { ButtonStandard, IconSpinner, FormularInput, FormularSelectBox },
   setup() {
     const contactStore = useContactStore();
     const volunteerStore = useVolunteerStore();

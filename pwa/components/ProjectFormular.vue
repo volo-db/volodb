@@ -198,23 +198,11 @@
 </template>
 
 <script>
-import ButtonStandard from "./ButtonStandard.vue";
 import { useProjectStore } from "~/stores/ProjectStore";
 import { useCountryStore } from "@/stores/CountryStore";
 import { isValidEmail, isValidPhoneNumber } from "@/utils/validations";
-import IconSpinner from "@/components/IconSpinner.vue";
-import FormularInput from "./FormularInput.vue";
-import FormularTextarea from "./FormularTextarea.vue";
-import FormularSelectBox from "./FormularSelectBox.vue";
 
 export default {
-  components: {
-    ButtonStandard,
-    IconSpinner,
-    FormularInput,
-    FormularTextarea,
-    FormularSelectBox,
-  },
   setup() {
     const projectStore = useProjectStore();
     const countryStore = useCountryStore();

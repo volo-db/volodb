@@ -66,14 +66,10 @@
   </section>
 </template>
 <script>
-import ButtonStandard from "./ButtonStandard.vue";
 import { useContractStore } from "@/stores/ContractStore";
-import FormularInput from "./FormularInput.vue";
-import IconSpinner from "./IconSpinner.vue";
 import { useVolunteerStore } from "~/stores/VolunteerStore";
 
 export default {
-  components: { ButtonStandard, IconSpinner, FormularInput },
   setup() {
     const contractStore = useContractStore();
     const volunteerStore = useVolunteerStore();

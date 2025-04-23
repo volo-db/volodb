@@ -55,20 +55,10 @@
 </template>
 
 <script>
-import AddressFormular from "./AddressFormular.vue";
 import ContainerModal from "./ContainerModal.vue";
 import { useVolunteerStore } from "~/stores/VolunteerStore";
-import IconPlus from "./IconPlus.vue";
-import IconPenEdit from "./IconPenEdit.vue";
-import IconTrash from "./IconTrash.vue";
+
 export default {
-  components: {
-    IconPlus,
-    ContainerModal,
-    AddressFormular,
-    IconPenEdit,
-    IconTrash,
-  },
   setup() {
     const volunteerStore = useVolunteerStore();
 

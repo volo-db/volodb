@@ -193,36 +193,15 @@
 </template>
 <script>
 import { useVolunteerStore } from "~/stores/VolunteerStore";
-import { useUserStore } from "@/stores/UserStore";
-import IconArrowShowDetailSummary from "./IconArrowShowDetailSummary.vue";
-import IconTableSortArrows from "./IconTableSortArrows.vue";
-import IconPenEdit from "./IconPenEdit.vue";
-import IconTrash from "./IconTrash.vue";
+import { useUserStore } from "~/stores/UserStore";
 import ContainerModal from "@/components/ContainerModal.vue";
-import NotesFormular from "@/components/NotesFormular.vue";
-import ButtonStandard from "@/components/ButtonStandard.vue";
-import SearchBar from "@/components/SearchBar.vue";
 import debounce from "lodash.debounce";
-import VolunteerDetailNotesTypeData from "@/components/VolunteerDetailNotesTypeData.vue";
-import IconMemo from "./IconMemo.vue";
 
 export default {
   setup: () => {
     const volunteerStore = useVolunteerStore();
     const userStore = useUserStore();
     return { volunteerStore, userStore };
-  },
-  components: {
-    IconArrowShowDetailSummary,
-    IconTableSortArrows,
-    IconPenEdit,
-    ContainerModal,
-    NotesFormular,
-    ButtonStandard,
-    SearchBar,
-    IconTrash,
-    VolunteerDetailNotesTypeData,
-    IconMemo,
   },
 
   data() {

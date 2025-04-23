@@ -86,4 +86,22 @@ declare global {
     name: string;
     description: string;
   }
+  // ++++++++++++++
+  // ++++ user ++++
+  // ++++++++++++++
+  interface roles {
+    id: number;
+    name: string;
+  }
+
+  interface User {
+    email: string;
+    person: {
+      id: number;
+      firstname: string;
+      lastname: string;
+      gender: "male" | "female" | "diverse" | "not specified";
+    };
+    roles: roles[];
+  }
 }

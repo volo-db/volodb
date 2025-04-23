@@ -193,21 +193,10 @@
 <script>
 import { useVolunteerStore } from "~/stores/VolunteerStore";
 // import SearchBar from '@/components/SearchBar.vue'
-import ButtonStandard from "@/components/ButtonStandard.vue";
+
 import { getAge, getAgeToday, getPropperDateString } from "@/utils/dateAndTime";
-import IconCalendar from "./IconCalendar.vue";
-import IconCircleWithCheckmark from "./IconCircleWithCheckmark.vue";
-import IconCircleWithPoint from "./IconCircleWithPoint.vue";
-import IconPalmTree from "./IconPalmTree.vue";
-import IconSeminars from "./IconSeminars.vue";
-import IconContract from "./IconContract.vue";
-import VolunteerDetailContractSallary from "./DetailContractSallary.vue";
-import IconDashboard from "./IconDashboard.vue";
-import IconClinicalThermometer from "./IconClinicalThermometer.vue";
-import IconPlus from "./IconPlus.vue";
-import IconPenEdit from "./IconPenEdit.vue";
+
 import ContainerModal from "./ContainerModal.vue";
-import VolunteerContractFormularSickdays from "./ContractFormularSickdays.vue";
 
 export default {
   setup: () => {
@@ -220,23 +209,7 @@ export default {
       sickDaysModal: false,
     };
   },
-  components: {
-    // SearchBar,
-    ButtonStandard,
-    IconCalendar,
-    IconCircleWithCheckmark,
-    IconCircleWithPoint,
-    IconPalmTree,
-    IconSeminars,
-    IconContract,
-    VolunteerDetailContractSallary,
-    IconDashboard,
-    IconClinicalThermometer,
-    IconPlus,
-    IconPenEdit,
-    ContainerModal,
-    VolunteerContractFormularSickdays,
-  },
+
   computed: {
     age() {
       return getAgeToday(this.volunteerStore.selectedVolunteer.birthday);

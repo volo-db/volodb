@@ -12,17 +12,20 @@
           for="edit"
           ><IconPenEdit
         /></label>
-        <input id="edit" type="file" hidden @change="$emit('fileSelected', $event)" name="avatar" />
+        <input
+          id="edit"
+          type="file"
+          hidden
+          @change="$emit('fileSelected', $event)"
+          name="avatar"
+        />
       </form>
     </div>
   </div>
 </template>
 
 <script>
-import IconPenEdit from '@/components/IconPenEdit.vue'
-
 export default {
-  components: { IconPenEdit },
-  props: ['src', 'alt']
-}
+  props: ["src", "alt"],
+};
 </script>

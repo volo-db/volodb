@@ -99,11 +99,6 @@
 <script>
 import { useVolunteerStore } from "~/stores/VolunteerStore.js";
 import ContainerModal from "@/components/ContainerModal.vue";
-import BasicPersonalDataFormular from "@/components/BasicPersonalDataFormular.vue";
-import VolunteerDetailOverviewAvatar from "./DetailOverviewAvatar.vue";
-import VolunteerDetailOverviewAddresses from "./DetailOverviewAddresses.vue";
-import VolunteerDetailOverviewContact from "./DetailOverviewContact.vue";
-import IconPenEdit from "@/components/IconPenEdit.vue";
 import { getPropperDateString } from "@/utils/dateAndTime";
 
 export default {
@@ -117,14 +112,7 @@ export default {
       getPropperDateString,
     };
   },
-  components: {
-    BasicPersonalDataFormular,
-    ContainerModal,
-    IconPenEdit,
-    VolunteerDetailOverviewAvatar,
-    VolunteerDetailOverviewAddresses,
-    VolunteerDetailOverviewContact,
-  },
+
   data() {
     return {
       volunteer: null,

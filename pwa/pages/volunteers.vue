@@ -50,8 +50,8 @@ watch(searchQuery, (newValue) => {
   debouncedSearch(newValue);
 });
 
-onMounted(() => {
-  debouncedSearchQuery.value = route.query.search || "";
-  searchQuery.value = debouncedSearchQuery.value;
-});
+// onMounted(() => {
+//   debouncedSearchQuery.value = route.query.search || "";
+//   searchQuery.value = debouncedSearchQuery.value;
+// });
 </script>

@@ -117,15 +117,10 @@
   </section>
 </template>
 <script>
-import ButtonStandard from "./ButtonStandard.vue";
 import { useVolunteerStore } from "~/stores/VolunteerStore";
 import { useCountryStore } from "@/stores/CountryStore";
-import FormularInput from "./FormularInput.vue";
-import FormularSelectBox from "./FormularSelectBox.vue";
-import IconSpinner from "./IconSpinner.vue";
 
 export default {
-  components: { ButtonStandard, IconSpinner, FormularInput, FormularSelectBox },
   setup() {
     const volunteerStore = useVolunteerStore();
     const countryStore = useCountryStore();

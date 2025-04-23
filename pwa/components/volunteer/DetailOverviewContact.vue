@@ -92,14 +92,7 @@
 </template>
 <script>
 import { useVolunteerStore } from "~/stores/VolunteerStore.js";
-import IconMail from "@/components/IconMail.vue";
-import IconPhone from "@/components/IconPhone.vue";
-import IconMessenger from "@/components/IconMessenger.vue";
-import IconPlus from "@/components/IconPlus.vue";
-import IconPenEdit from "./IconPenEdit.vue";
-import IconTrash from "./IconTrash.vue";
 import ContainerModal from "./ContainerModal.vue";
-import ContactFormular from "./ContactFormular.vue";
 import { parsePhoneNumber } from "libphonenumber-js";
 import { useContactStore } from "@/stores/ContactStore";
 
@@ -116,16 +109,7 @@ export default {
       contactStore,
     };
   },
-  components: {
-    IconMail,
-    IconPhone,
-    IconMessenger,
-    IconPlus,
-    IconPenEdit,
-    IconTrash,
-    ContainerModal,
-    ContactFormular,
-  },
+
   data() {
     return {
       contacts: null,

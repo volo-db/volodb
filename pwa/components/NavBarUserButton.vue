@@ -10,18 +10,17 @@
 </template>
 
 <script>
-import { useUserStore } from '@/stores/UserStore.js'
+import { useUserStore } from "~/stores/UserStore.js";
 
 export default {
-  components: {},
   setup() {
-    const userStore = useUserStore()
-    const baseUrl = import.meta.env.VITE_BASE_URL
+    const userStore = useUserStore();
+    const baseUrl = import.meta.env.VITE_BASE_URL;
 
     return {
       userStore,
-      baseUrl
-    }
-  }
-}
+      baseUrl,
+    };
+  },
+};
 </script>

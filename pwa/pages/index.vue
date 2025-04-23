@@ -75,12 +75,13 @@
 
 <script setup>
 import { useUserStore } from "@/stores/UserStore";
+import { navigateTo } from "#app";
 
 const userStore = useUserStore();
 const router = useRouter();
 
 // Falls User bereits eingeloggt ist, weiterleiten
-if (userStore.loggedIn) {
+if (userStore.token) {
   router.replace({ name: "volunteers" });
 }
 
@@ -110,7 +111,8 @@ const onSubmit = async () => {
   }
   try {
     await userStore.login(email.value, password.value);
-    router.push("/volunteers");
+    navigateTo("/volunteers");
+    // router.push("/volunteers");
   } catch (error) {
     console.error(error);
     errorAnimationMail();

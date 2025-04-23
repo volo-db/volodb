@@ -1,5 +1,7 @@
 <template>
-  <div class="flex justify-center bg-white text-voloblue-200 border-t border-b-white rounded-b-md">
+  <div
+    class="flex justify-center bg-white text-voloblue-200 border-t border-b-white rounded-b-md"
+  >
     <div class="h-auto w-[75px] mr-auto"></div>
     <div class="flex items-center">
       <!-- toFirst and one backward -->
@@ -30,46 +32,42 @@
 </template>
 
 <script>
-import FormularSelectBox from './FormularSelectBox.vue'
-import IconArrowCircleLeft from './IconArrowCircleLeft.vue'
-import IconArrowCircleLeftLeft from './IconArrowCircleLeftLeft.vue'
 export default {
-  components: { FormularSelectBox, IconArrowCircleLeftLeft, IconArrowCircleLeft },
   data() {
     return {
-      currentLength: null
-    }
+      currentLength: null,
+    };
   },
   props: {
     currentPage: Number,
     totalPages: Number,
-    pageLength: Number
+    pageLength: Number,
   },
   watch: {
     currentLength(newValue) {
-      this.$emit('updateLength', Number(newValue))
-    }
+      this.$emit("updateLength", Number(newValue));
+    },
   },
   methods: {
     pageBackward() {
       if (this.currentPage > 0) {
-        this.$emit('updatePage', this.currentPage - 1)
+        this.$emit("updatePage", this.currentPage - 1);
       }
     },
     pageForward() {
       if (this.currentPage !== this.totalPages - 1) {
-        this.$emit('updatePage', this.currentPage + 1)
+        this.$emit("updatePage", this.currentPage + 1);
       }
     },
     pageToLast() {
-      this.$emit('updatePage', this.totalPages - 1)
+      this.$emit("updatePage", this.totalPages - 1);
     },
     pageToFirst() {
-      this.$emit('updatePage', 0)
-    }
+      this.$emit("updatePage", 0);
+    },
   },
   beforeMount() {
-    this.currentLength = String(this.pageLength)
-  }
-}
+    this.currentLength = String(this.pageLength);
+  },
+};
 </script>
