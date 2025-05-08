@@ -63,7 +63,7 @@
               class="text-voloblue-200 md:pr-1"
               :class="{ 'rounded-tr-md ': index === 0 }"
             >
-              <IconArrowGoto
+              <IconArrowGoTo
                 class="text-voloblue-200 ml-auto mr-2 opacity-50"
               />
             </td>
@@ -124,6 +124,7 @@ const props = defineProps<{ searchQuery: string }>();
 const goToDetails = (volunteerId: number) => {
   console.log(volunteerId);
   navigateTo({ name: "volunteerdetail-id", params: { id: volunteerId } });
+  console.log();
   // router.push(`volunteerdetail/${volunteerId}`);
 };
 

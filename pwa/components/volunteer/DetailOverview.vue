@@ -96,88 +96,56 @@
     />
   </ContainerModal>
 </template>
-<script>
+<script setup>
 import { useVolunteerStore } from "~/stores/VolunteerStore.js";
 import ContainerModal from "@/components/ContainerModal.vue";
 import { getPropperDateString } from "@/utils/dateAndTime";
 
-export default {
-  setup() {
-    const volunteerStore = useVolunteerStore();
-    const baseUrl = import.meta.env.VITE_BASE_URL;
+const volunteerStore = useVolunteerStore();
+const apiUrl = config.public.baseUrl;
 
-    return {
-      volunteerStore,
-      baseUrl,
-      getPropperDateString,
-    };
-  },
+const volunteer = ref(null);
+const contacts = ref(null);
+const addresses = ref(null);
+const relevantContract = ref(null);
+const hover = ref(false);
+const newNameModal = ref(false);
 
-  data() {
-    return {
-      volunteer: null,
-      contacts: null,
-      addresses: null,
-      relevantContract: null,
-      hover: false,
-      newNameModal: false,
-    };
-  },
-  methods: {
-    async onNameSaved() {
-      this.newNameModal = false;
-      await this.volunteerStore.getVolunteer(
-        this.volunteerStore.selectedVolunteer.id
-      );
-      this.volunteer = this.volunteerStore.selectedVolunteer;
-    },
-    async editAvatar(event) {
-      const file = event.target.files[0];
-
-      if (file) {
-        const formData = new FormData();
-        formData.append("avatar", file);
-
-        try {
-          await this.volunteerStore.editVolunteerAvatar(
-            formData,
-            this.$route.params.volunteerId
-          );
-        } catch (error) {
-          console.error("Error editing Avatar: ", error);
-        } finally {
-          await this.volunteerStore.getVolunteer(
-            this.$route.params.volunteerId
-          );
-          this.volunteer = this.volunteerStore.selectedVolunteer;
-        }
-      }
-    },
-  },
-  computed: {
-    // Computed property to generate a new avatar src URL with a cache-busting query parameter
-    avatarSrc() {
-      return this.volunteer
-        ? `${this.baseUrl}/files/${this.volunteer.avatar}?t=${Date.now()}`
-        : "";
-    },
-  },
-
-  async beforeMount() {
-    await this.volunteerStore.getVolunteer(this.$route.params.volunteerId);
-    this.volunteer = this.volunteerStore.selectedVolunteer;
-    this.contacts = this.volunteerStore.selectedVolunteerContacts;
-    this.addresses = this.volunteerStore.selectedVolunteerAddresses;
-    this.relevantContract =
-      this.volunteerStore.selectedVolunteerRelevantContract;
-  },
-  watch: {
-    volunteer(newVal) {
-      if (newVal) {
-        // Automatically updates the `volunteer` property based on the store's `selectedVolunteer`
-        this.volunteer = this.volunteerStore.selectedVolunteer;
-      }
-    },
-  },
+const onNameSaved = async () => {
+  newNameModal.value = false;
+  await volunteerStore.getVolunteer(volunteerStore.selectedVolunteer.id);
+  volunteer.value = volunteerStore.selectedVolunteer;
 };
+
+const editAvatar = async (event) => {
+  const file = event.target.files[0];
+
+  if (file) {
+    const formData = new FormData();
+    formData.append("avatar", file);
+    try {
+      await volunteerStore.editVolunteerAvatar(
+        formData,
+        $route.params.volunteerId
+      );
+    } catch (error) {
+      console.error("Error editing Avatar: ", error);
+    } finally {
+      await volunteerStore.getVolunteer($route.params.volunteerId);
+      volunteer.value = volunteerStore.selectedVolunteer;
+    }
+  }
+};
+
+const avatarSrc = () => {
+  return this.volunteer
+    ? `${apiUrl}/files/${volunteer.avatar}?t=${Date.now()}`
+    : "";
+};
+
+watch((volunteer, newValue) => {
+  if (newValue) {
+    volunteer.value = volunteerStore.selectedVolunteer;
+  }
+});
 </script>

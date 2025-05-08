@@ -26,26 +26,24 @@
 </template>
 <script setup>
 import { useVolunteerStore } from "@/stores/VolunteerStore.js";
-
 // import debounce from "lodash.debounce";
 
-const route = useRoute();
-const router = useRouter();
 const volunteerStore = useVolunteerStore();
 
-const selectedContextTab = computed(() => {
-  return route.params.contextTab?.toLowerCase();
-});
+// const selectedContextTab = computed(() => {
+//   return route.params.contextTab?.toLowerCase();
+// });
 
 const openTab = (tabName) => {
   router.push({
-    name: "VolunteerDetailViewWithContext", // Optional: Oder lieber per Pfad
+    name: "VolunteerDetailViewWithContext",
     params: {
       volunteerId: route.params.volunteerId,
       contextTab: String(tabName).toLowerCase(),
     },
   });
 };
+
 const getNotes = async () => {
   const params = { volunteerId: route.params.volunteerId };
   try {
